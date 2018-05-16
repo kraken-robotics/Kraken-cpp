@@ -1,5 +1,5 @@
 #include "itinerary_point.h"
-#include <math.h>
+#include <cmath.h>
 
 namespace kraken
 {
@@ -13,7 +13,7 @@ namespace kraken
         going_forward_(going_forward), max_speed_(max_speed),
         possible_speed_(possible_speed), stop_(stop)
     {
-        orientation_ = fmod(orientation_, 2 * M_PI);
+        orientation_ = std::fmod(orientation_, 2 * M_PI);
         if(orientation_ < 0)
             orientation_ += 2 * M_PI;
     }
