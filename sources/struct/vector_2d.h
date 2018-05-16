@@ -1,5 +1,5 @@
-#ifndef KRAKEN_VECTOR2D_H
-#define KRAKEN_VECTOR2D_H
+#ifndef KRAKEN_VECTOR_2D_H
+#define KRAKEN_VECTOR_2D_H
 
 #include <ostream>
 
@@ -66,4 +66,4 @@ namespace kraken
     };
 }
 
-#endif //KRAKEN_VECTOR2D_H
+#endif //KRAKEN_VECTOR_2D_H
