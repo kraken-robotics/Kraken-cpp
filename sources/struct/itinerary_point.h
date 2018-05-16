@@ -26,7 +26,9 @@ namespace kraken
         bool going_forward_;
         bool stop_;
 
+#if DEBUG
         friend std::ostream &operator<<(std::ostream &strm, const ItineraryPoint &v);
+#endif
     };
 }
 

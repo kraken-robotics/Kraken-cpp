@@ -27,6 +27,7 @@ namespace kraken
             && stop_ == rhs.stop_;
     }
 
+#if DEBUG
     std::ostream &operator<<(std::ostream &strm, const ItineraryPoint &i)
     {
         return strm << "ItineraryPoint(" << i.pos_ << ", o : " << i.orientation_
@@ -34,5 +35,6 @@ namespace kraken
             << ", c : " << i.curvature_ << ", max speed : " << i.max_speed_
             << ", possible speed : " << i.possible_speed_ << (i.stop_ ? ", ending with a stop)" : ")");
     }
+#endif
 
 }
