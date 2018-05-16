@@ -10,14 +10,13 @@ namespace kraken
     {
     public:
         Vector2D();
-        Vector2D(float x, float y);
-        Vector2D(const Vector2D &);
+        Vector2D(const float &x, const float &y);
 
         Vector2D operator+(const Vector2D &rhs) const;
         Vector2D &operator+=(const Vector2D &rhs);
         Vector2D operator-(const Vector2D &rhs) const;
         Vector2D &operator-=(const Vector2D &rhs);
-        Vector2D &operator*=(const float d);
+        Vector2D &operator*=(const float &d);
         bool operator==(const Vector2D &rhs) const;
         float dot(const Vector2D &other) const;
 
