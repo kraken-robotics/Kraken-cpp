@@ -3,7 +3,9 @@ os :
     - linux
     - osx
 script :
-    - cmake CMakeLists.txt
+    - mkdir build
+    - cp build
+    - cmake ..
     - make
 compiler :
     - clang
