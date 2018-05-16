@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include <cmath>
-#include "../sources/struct/Vector2D.h"
+#include "../sources/struct/vector_2d.h"
 
 TEST_CASE("Vector2D", "[vector]")
 {

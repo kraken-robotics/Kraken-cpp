@@ -1,6 +1,6 @@
 #include <cmath>
 #include <cassert>
-#include "Vector2D.h"
+#include "vector_2d.h"
 
 namespace kraken
 {
