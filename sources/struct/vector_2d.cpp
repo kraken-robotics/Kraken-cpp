@@ -1,4 +1,5 @@
 #include <cmath>
+#include <algorithm>
 #include <cassert>
 #include "vector_2d.h"
 
@@ -212,8 +213,10 @@ namespace kraken
         return Vector2D(x, y);
     }
 
+#if DEBUG
     std::ostream &operator<<(std::ostream &strm, const Vector2D &v)
     {
         return strm << "Vector2D(" << v.x_ << "," << v.y_ << ")";
     }
+#endif
 }

@@ -1,7 +1,9 @@
 #ifndef KRAKEN_VECTOR_2D_H
 #define KRAKEN_VECTOR_2D_H
 
+#if DEBUG
 #include <ostream>
+#endif
 
 namespace kraken
 {
@@ -61,8 +63,9 @@ namespace kraken
         float x_;
         float y_;
 
+#if DEBUG
         friend std::ostream &operator<<(std::ostream &strm, const Vector2D &v);
-
+#endif
     };
 }
 
