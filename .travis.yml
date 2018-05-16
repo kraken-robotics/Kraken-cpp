@@ -4,7 +4,7 @@ os :
     - osx
 script :
     - mkdir build
-    - cp build
+    - cd build
     - cmake ..
     - make
 compiler :
