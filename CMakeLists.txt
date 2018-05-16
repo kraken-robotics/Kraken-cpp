@@ -5,3 +5,5 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(Kraken
         main.cpp sources/struct/Vector2D.cpp sources/struct/Vector2D.h)
+
+include(tests/CMakeLists.txt)
