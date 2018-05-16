@@ -4,4 +4,4 @@ project(Kraken)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(Kraken
-        main.cpp sources/struct/Vector2D.cpp sources/struct/Vector2D.h)
+        main.cpp sources/struct/Vector2D.cpp sources/struct/Vector2D.h sources/struct/itinerary_point.cpp sources/struct/itinerary_point.h)
