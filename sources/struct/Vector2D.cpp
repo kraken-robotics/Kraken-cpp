@@ -56,6 +56,11 @@ namespace kraken
         return !(x_ != rhs.x_ || (y_ != rhs.y_));
     }
 
+    bool Vector2D::operator!=(const Vector2D &rhs) const
+    {
+        return x_ != rhs.x_ || y_ != rhs.y_;
+    }
+
     float Vector2D::dot(const Vector2D &other) const
     {
         return x_ * other.x_ + y_ * other.y_;
@@ -86,7 +91,7 @@ namespace kraken
         return *this;
     }
 
-    Vector2D Vector2D::rotate(float angle, Vector2D &rotation_center) const
+    Vector2D Vector2D::rotate(float angle, const Vector2D &rotation_center) const
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -95,7 +100,7 @@ namespace kraken
         return Vector2D(x, y);
     }
 
-    void Vector2D::rotate(float angle, Vector2D &rotation_center)
+    void Vector2D::rotate(float angle, const Vector2D &rotation_center)
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
