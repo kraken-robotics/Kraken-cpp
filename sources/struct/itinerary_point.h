@@ -1,7 +1,10 @@
 #ifndef KRAKEN_ITINERARYPOINT_H
 #define KRAKEN_ITINERARYPOINT_H
 
+#if DEBUG
 #include <ostream>
+#endif
+
 #include "Vector2D.h"
 
 namespace kraken
