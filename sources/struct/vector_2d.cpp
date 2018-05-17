@@ -1,6 +1,7 @@
 #include <cmath>
+#include <algorithm>
 #include <cassert>
-#include "Vector2D.h"
+#include "vector_2d.h"
 
 namespace kraken
 {
@@ -10,12 +11,7 @@ namespace kraken
 
     }
 
-    Vector2D::Vector2D(float x, float y) : x_(x), y_(y)
-    {
-
-    }
-
-    Vector2D::Vector2D(const Vector2D &other) : x_(other.x_), y_(other.y_)
+    Vector2D::Vector2D(const float &x, const float &y) : x_(x), y_(y)
     {
 
     }
@@ -44,7 +40,7 @@ namespace kraken
         return *this;
     }
 
-    Vector2D &Vector2D::operator*=(const float d)
+    Vector2D &Vector2D::operator*=(const float &d)
     {
         x_ *= d;
         y_ *= d;
@@ -53,7 +49,12 @@ namespace kraken
 
     bool Vector2D::operator==(const Vector2D &rhs) const
     {
-        return !(x_ != rhs.x_ || (y_ != rhs.y_));
+        return x_ == rhs.x_ && y_ == rhs.y_;
+    }
+
+    bool Vector2D::operator!=(const Vector2D &rhs) const
+    {
+        return x_ != rhs.x_ || y_ != rhs.y_;
     }
 
     float Vector2D::dot(const Vector2D &other) const
@@ -86,7 +87,7 @@ namespace kraken
         return *this;
     }
 
-    Vector2D Vector2D::rotate(float angle, Vector2D &rotation_center) const
+    Vector2D Vector2D::rotate(float angle, const Vector2D &rotation_center) const
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -95,7 +96,7 @@ namespace kraken
         return Vector2D(x, y);
     }
 
-    void Vector2D::rotate(float angle, Vector2D &rotation_center)
+    void Vector2D::rotate(float angle, const Vector2D &rotation_center)
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -180,19 +181,19 @@ namespace kraken
         y_ = y;
     }
 
-    bool Vector2D::segmentIntersection(Vector2D &pointA1, Vector2D &pointA2, Vector2D &pointB1, Vector2D &pointB2)
+    bool Vector2D::segmentIntersection(Vector2D &point_A1, Vector2D &point_A2, Vector2D &point_B1, Vector2D &point_B2)
     {
         // Source : https://stackoverflow.com/questions/3746274/line-intersection-with-aabb-rectangle
 
-        Vector2D b = pointA2 - pointA1;
-        Vector2D d = pointB2 - pointB1;
+        Vector2D b = point_A2 - point_A1;
+        Vector2D d = point_B2 - point_B1;
         float bDotDPerp = b.x_ * d.y_ - b.y_ * d.x_;
 
         // if b dot d == 0, it means the lines are parallel so have infinite intersection points
         if (bDotDPerp == 0)
             return false;
 
-        Vector2D c = pointB1 - pointA1;
+        Vector2D c = point_B1 - point_A1;
         float t = (c.x_ * d.y_ - c.y_ * d.x_) / bDotDPerp;
         if (t < 0 || t > 1)
             return false;
@@ -212,8 +213,10 @@ namespace kraken
         return Vector2D(x, y);
     }
 
+#if DEBUG
     std::ostream &operator<<(std::ostream &strm, const Vector2D &v)
     {
         return strm << "Vector2D(" << v.x_ << "," << v.y_ << ")";
     }
+#endif
 }
