@@ -216,7 +216,7 @@ namespace kraken
 #if DEBUG
     std::ostream &operator<<(std::ostream &strm, const Vector2D &v)
     {
-        return strm << "Vector2D(" << v.x_ << "," << v.y_ << ")";
+        return strm << "Vector2D(" << v.x_ << "," << v.y_ << ")" << std::endl;
     }
 #endif
 }
