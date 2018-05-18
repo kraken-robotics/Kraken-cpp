@@ -9,12 +9,12 @@ namespace kraken
 
     }
 
-    OrientedPosition2D::OrientedPosition2D(float x, float y) : x_(x), y_(y), orientation_(0)
+    OrientedPosition2D::OrientedPosition2D(const float &x, const float &y) : x_(x), y_(y), orientation_(0)
     {
 
     }
 
-    OrientedPosition2D::OrientedPosition2D(float x, float y, float orientation) : x_(x), y_(y),
+    OrientedPosition2D::OrientedPosition2D(const float &x, const float &y, const float &orientation) : x_(x), y_(y),
                                                                                   orientation_(orientation)
     {
 
@@ -35,7 +35,7 @@ namespace kraken
         return orientation_;
     }
 
-    float OrientedPosition2D::angle_difference(float angle_1, float angle_2)
+    float OrientedPosition2D::angle_difference(const float &angle_1, const float &angle_2)
     {
         float deltaO = std::fmod(angle_1 - angle_2, 2.f * static_cast<float >(M_PI));
         if (deltaO > M_PI)

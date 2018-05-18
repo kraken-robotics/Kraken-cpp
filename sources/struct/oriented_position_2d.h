@@ -2,9 +2,7 @@
 #define TESTS_ORIENTED_POSITION_2D_H
 
 #if DEBUG
-
 #include <ostream>
-
 #endif
 
 namespace kraken
@@ -13,15 +11,15 @@ namespace kraken
     {
     public:
         OrientedPosition2D();
-        OrientedPosition2D(float x, float y);
-        OrientedPosition2D(float x, float y, float orientation);
+        OrientedPosition2D(const float &x, const float &y);
+        OrientedPosition2D(const float &x, const float &y, const float &orientation);
 
         float getX() const;
         float getY() const;
         float getOrientation() const;
 
     public:
-        static float angle_difference(float angle_1, float angle_2);
+        static float angle_difference(const float &angle_1, const float &angle_2);
 
     protected:
         float x_;
