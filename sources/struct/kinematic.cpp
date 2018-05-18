@@ -1,4 +1,4 @@
-#include "Kinematic.h"
+#include "kinematic.h"
 
 #include <cmath>
 
