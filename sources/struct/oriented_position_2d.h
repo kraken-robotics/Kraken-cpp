@@ -10,7 +10,7 @@ namespace kraken
     class OrientedPosition2D
     {
     public:
-        OrientedPosition2D();
+        OrientedPosition2D() = delete;
         OrientedPosition2D(const float &x, const float &y);
         OrientedPosition2D(const float &x, const float &y, const float &orientation);
 
@@ -22,9 +22,9 @@ namespace kraken
         static float angle_difference(const float &angle_1, const float &angle_2);
 
     protected:
-        float x_;
-        float y_;
-        float orientation_;
+        const float x_;
+        const float y_;
+        const float orientation_;
 
 #if DEBUG
         friend std::ostream &operator<<(std::ostream &strm, const OrientedPosition2D &v);

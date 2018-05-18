@@ -4,11 +4,6 @@
 
 namespace kraken
 {
-    OrientedPosition2D::OrientedPosition2D() : x_(0), y_(0), orientation_(0)
-    {
-
-    }
-
     OrientedPosition2D::OrientedPosition2D(const float &x, const float &y) : x_(x), y_(y), orientation_(0)
     {
 
