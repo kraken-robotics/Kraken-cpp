@@ -9,11 +9,11 @@ namespace kraken
     class Obstacle
     {
     public:
-        virtual bool isInObstacle(Vector2D pos) = 0;
-        virtual float squaredDistance(Vector2D pos) = 0;
-        virtual Vector2D* getExpandedConvexHull(float expansion, float longestAllowedLength) = 0;
-        virtual bool isColliding(Vector2D point_a, Vector2D point_b) = 0;
         Obstacle(const Vector2D &rotation_center);
+        virtual bool isInObstacle(const Vector2D &pos) const = 0;
+        virtual float squaredDistance(const Vector2D &pos) const = 0;
+        virtual Vector2D* getExpandedConvexHull(float expansion, float longestAllowedLength) const = 0;
+        virtual bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const = 0;
         bool operator==(const Obstacle &rhs) const;
         //virtual bool isColliding(RectangularObstacle obs)
 
