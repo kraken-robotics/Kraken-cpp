@@ -73,4 +73,11 @@ namespace kraken
         go_forward_ = go_forward;
         stop_ = stop;
     }
+
+#if DEBUG
+    std::ostream &operator<<(std::ostream &strm, const kraken::Kinematic &v)
+    {
+        return strm << "Kinematic(" << v.position_.getX() << ", " << v.position_.getY() << ", orientation :" << v.real_orientation_ << "," << (v.go_forward_ ? "going forward" : "going backward") << ", curvate :" << v.real_curvature_ << (v.stop_ ? ")" : " stop)") << std::endl;
+    }
+#endif
 }

@@ -32,6 +32,9 @@ namespace kraken
         bool go_forward_;
         bool stop_;
 
+#if DEBUG
+        friend std::ostream &operator<<(std::ostream &strm, const Kinematic &v);
+#endif
     };
 }
 
