@@ -16,11 +16,6 @@ namespace kraken
 
     }
 
-    Vector2D::Vector2D(const Vector2D &vector) : x_(vector.getX()), y_(vector.getY())
-    {
-
-    }
-
     Vector2D Vector2D::operator+(const Vector2D &rhs) const
     {
         return Vector2D(x_ + rhs.x_, y_ + rhs.y_);
