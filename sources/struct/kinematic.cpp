@@ -7,13 +7,15 @@ namespace kraken
 
     Kinematic::Kinematic()
             : Vector2D(0, 0), geometric_orientation_(0), geometric_curvature_(0), real_orientation_(0),
-              real_curvature_(0), go_forward_(true), stop_(true)
+              real_curvature_(0), go_forward_(true), stop_(false)
     {
 
     }
 
     Kinematic::Kinematic(const float &x, const float &y, const float &orientation)
     {
+        go_forward_ = true;
+        stop_ = false;
         update_real(x, y, orientation, 0);
     }
 
