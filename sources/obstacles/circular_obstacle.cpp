@@ -51,18 +51,20 @@ namespace kraken
         if (nbPoints < 3)
             nbPoints = 3;
 
-        Vector2D* hull = new Vector2D[nbPoints];
-        for(int i = 0; i < nbPoints; ++i)
+        Vector2D *hull = new Vector2D[nbPoints];
+        for (int i = 0; i < nbPoints; ++i)
             hull[i] = Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_;
 
         return hull;
     }
 
 #if DEBUG
+
     std::ostream &operator<<(std::ostream &strm, const CircularObstacle &o)
     {
         return strm << "CircularObstacle(" << o.rotation_center_ << "," << o.radius_ << ")" << std::endl;
     }
+
 #endif
 
 }
