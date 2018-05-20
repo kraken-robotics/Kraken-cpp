@@ -11,3 +11,8 @@ script :
 compiler :
     - clang
     - gcc
+notifications:
+    slack: intech-sudparis:o8dpjkPWxJHduwjMye4pjPeF
+    on_success: change
+    on_failure: always
+    email : false
