@@ -45,17 +45,17 @@ namespace kraken
         return isInObstacle(point_a) || isInObstacle(point_b);
     }
 
-    Vector2D *CircularObstacle::getExpandedConvexHull(float expansion, float longestAllowedLength) const
+    void CircularObstacle::getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const
     {
         int nbPoints = std::ceil(M_2_PI * (radius_ + expansion) / longestAllowedLength);
         if (nbPoints < 3)
             nbPoints = 3;
 
-        Vector2D *hull = new Vector2D[nbPoints];
-        for (int i = 0; i < nbPoints; ++i)
-            hull[i] = Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_;
+        vector_2d_list.clear();
+        vector_2d_list.resize(nbPoints);
 
-        return hull;
+        for (int i = 0; i < nbPoints; ++i)
+            vector_2d_list.push_back(Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_);
     }
 
 #if DEBUG
