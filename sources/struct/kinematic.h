@@ -6,7 +6,7 @@
 
 namespace kraken
 {
-    class Kinematic : public Vector2D
+    class Kinematic
     {
     public:
         Kinematic();
@@ -22,6 +22,7 @@ namespace kraken
         void update_real(const float &x, const float &y, const float &real_orientation, const float &real_curvature);
 
     protected:
+        Vector2D position_;
         float geometric_orientation_;
         float geometric_curvature_;
 

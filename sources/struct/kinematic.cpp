@@ -6,19 +6,23 @@ namespace kraken
 {
 
     Kinematic::Kinematic()
-            : Vector2D(0, 0), geometric_orientation_(0), geometric_curvature_(0), real_orientation_(0),
-              real_curvature_(0), go_forward_(true), stop_(true)
+            : position_(0, 0), geometric_orientation_(0), geometric_curvature_(0), real_orientation_(0),
+              real_curvature_(0), go_forward_(true), stop_(false)
     {
 
     }
 
     Kinematic::Kinematic(const float &x, const float &y, const float &orientation)
+            : position_(x, y), geometric_orientation_(0), geometric_curvature_(0), real_orientation_(orientation),
+              real_curvature_(0), go_forward_(true), stop_(false)
     {
         update_real(x, y, orientation, 0);
     }
 
     Kinematic::Kinematic(const float &x, const float &y, const float &orientation, const bool &go_forward,
                          const float &curvature, const bool &stop)
+            : position_(x, y), geometric_orientation_(0), geometric_curvature_(0), real_orientation_(orientation),
+              real_curvature_(0), go_forward_(true), stop_(false)
     {
         update(x, y, orientation, go_forward, curvature, stop);
     }
@@ -43,8 +47,8 @@ namespace kraken
             geometric_curvature_ = -real_curvature;
         }
 
-        x_ = x;
-        y_ = y;
+        position_.setX(x);
+        position_.setX(y);
         real_orientation_ = real_orientation;
         real_curvature_ = real_curvature;
     }
@@ -62,8 +66,8 @@ namespace kraken
             real_curvature_ = -geometric_curvature;
         }
 
-        x_ = x;
-        y_ = y;
+        position_.setX(x);
+        position_.setX(y);
         geometric_orientation_ = geometric_orientation;
         geometric_curvature_ = geometric_curvature;
         go_forward_ = go_forward;
