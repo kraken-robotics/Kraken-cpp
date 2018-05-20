@@ -4,6 +4,10 @@
 #include "../struct/vector_2d.h"
 #include "obstacle.h"
 
+#if DEBUG
+#include <ostream>
+#endif
+
 namespace kraken
 {
     class CircularObstacle : public Obstacle
@@ -15,6 +19,10 @@ namespace kraken
         float squaredDistance(const Vector2D &pos) const;
         Vector2D* getExpandedConvexHull(float expansion, float longestAllowedLength) const;
         bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const;
+
+        #if DEBUG
+        friend std::ostream &operator<<(std::ostream &strm, const CircularObstacle &o);
+        #endif
 
     protected:
         float const radius_;

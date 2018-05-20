@@ -57,4 +57,12 @@ namespace kraken
 
         return hull;
     }
+
+#if DEBUG
+    std::ostream &operator<<(std::ostream &strm, const CircularObstacle &o)
+    {
+        return strm << "CircularObstacle(" << o.rotation_center_ << "," << o.radius_ << ")" << std::endl;
+    }
+#endif
+
 }
