@@ -27,6 +27,15 @@ namespace kraken
         update(x, y, orientation, go_forward, curvature, stop);
     }
 
+    bool Kinematic::operator==(const kraken::Kinematic &rhs) const
+    {
+        return rhs.position_.squaredDistance(position_) < 50f * 50f
+               && std::abs(real_curvature_ - rhs.real_curvature_) < 2
+               && std::abs(real_orientation_ - rhs.real_orientation_) < static_cast<float>(M_PI) / 6f
+               // TODO : use angle_difference
+               && rhs.go_forward_ == go_forward_ && rhs.stop_ == stop_;
+    }
+
     void Kinematic::update(const ItineraryPoint &iP)
     {
         go_forward_ = iP.getGoingForward();
@@ -41,7 +50,8 @@ namespace kraken
         {
             geometric_orientation_ = real_orientation;
             geometric_curvature_ = real_curvature;
-        } else
+        }
+        else
         {
             geometric_orientation_ = real_orientation + static_cast<float>(M_PI);
             geometric_curvature_ = -real_curvature;
@@ -60,7 +70,8 @@ namespace kraken
         {
             real_orientation_ = geometric_orientation;
             real_curvature_ = geometric_curvature;
-        } else
+        }
+        else
         {
             real_orientation_ = geometric_orientation + static_cast<float>(M_PI);
             real_curvature_ = -geometric_curvature;
@@ -75,9 +86,13 @@ namespace kraken
     }
 
 #if DEBUG
+
     std::ostream &operator<<(std::ostream &strm, const kraken::Kinematic &v)
     {
-        return strm << "Kinematic(" << v.position_.getX() << ", " << v.position_.getY() << ", orientation :" << v.real_orientation_ << "," << (v.go_forward_ ? "going forward" : "going backward") << ", curvate :" << v.real_curvature_ << (v.stop_ ? ")" : " stop)") << std::endl;
+        return strm << "Kinematic(" << v.position_.getX() << ", " << v.position_.getY() << ", orientation :"
+                    << v.real_orientation_ << "," << (v.go_forward_ ? "going forward" : "going backward")
+                    << ", curvate :" << v.real_curvature_ << (v.stop_ ? ")" : " stop)") << std::endl;
     }
+
 #endif
 }

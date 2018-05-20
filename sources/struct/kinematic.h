@@ -18,6 +18,8 @@ namespace kraken
         void update(const float &x, const float &y, const float &geometric_orientation, const bool &go_forward,
                     const float &geometric_curvature, const bool &stop);
 
+        bool operator==(const Kinematic &rhs) const;
+
     protected:
         void update_real(const float &x, const float &y, const float &real_orientation, const float &real_curvature);
 
