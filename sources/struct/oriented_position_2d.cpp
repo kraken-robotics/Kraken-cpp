@@ -15,6 +15,21 @@ namespace kraken
 
     }
 
+    float OrientedPosition2D::getX() const
+    {
+        return x_;
+    }
+
+    float OrientedPosition2D::getY() const
+    {
+        return y_;
+    }
+
+    float OrientedPosition2D::getOrientation() const
+    {
+        return orientation_;
+    }
+
     float OrientedPosition2D::angle_difference(const float &angle_1, const float &angle_2)
     {
         float deltaO = std::fmod(angle_1 - angle_2, 2.f * static_cast<float >(M_PI));
