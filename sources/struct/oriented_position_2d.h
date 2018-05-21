@@ -19,7 +19,7 @@ namespace kraken
         float getOrientation() const;
 
     public:
-        static float angle_difference(const float &angle_1, const float &angle_2);
+        static float angleDifference(const float &angle_1, const float &angle_2);
 
     protected:
         const float x_;
