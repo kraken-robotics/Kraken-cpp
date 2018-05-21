@@ -28,7 +28,7 @@ namespace kraken
         bool getStop() const;
 
     private:
-        float compute_new_orientation(const float &orientation);
+        float computeNewOrientation(const float &orientation);
 
     private:
         const Vector2D pos_;

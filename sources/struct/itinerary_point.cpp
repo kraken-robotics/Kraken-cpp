@@ -9,7 +9,7 @@ namespace kraken
                                    const bool &going_forward, const float &max_speed,
                                    const float &possible_speed, const bool &stop) :
             pos_(pos),
-            orientation_(compute_new_orientation(orientation)), curvature_(curvature),
+            orientation_(computeNewOrientation(orientation)), curvature_(curvature),
             going_forward_(going_forward), max_speed_(max_speed),
             possible_speed_(possible_speed), stop_(stop)
     {
@@ -24,7 +24,7 @@ namespace kraken
                && stop_ == rhs.stop_;
     }
 
-    float ItineraryPoint::compute_new_orientation(const float &orientation)
+    float ItineraryPoint::computeNewOrientation(const float &orientation)
     {
         float computed_orientation = std::fmod(orientation, 2.f * static_cast<float>(M_PI));
         if (computed_orientation < 0)
