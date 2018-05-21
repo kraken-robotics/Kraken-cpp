@@ -16,7 +16,7 @@ namespace kraken
             : position_(x, y), geometric_orientation_(0), geometric_curvature_(0), real_orientation_(orientation),
               real_curvature_(0), go_forward_(true), stop_(false)
     {
-        update_real(x, y, orientation, 0);
+        updateReal(x, y, orientation, 0);
     }
 
     Kinematic::Kinematic(const float &x, const float &y, const float &orientation, const bool &go_forward,
@@ -39,12 +39,12 @@ namespace kraken
     void Kinematic::update(const ItineraryPoint &iP)
     {
         go_forward_ = iP.getGoingForward();
-        update_real(iP.getX(), iP.getY(), iP.getOrientation(), iP.getCurvature());
+        updateReal(iP.getX(), iP.getY(), iP.getOrientation(), iP.getCurvature());
         stop_ = iP.getStop();
     }
 
-    void Kinematic::update_real(const float &x, const float &y, const float &real_orientation,
-                                const float &real_curvature)
+    void Kinematic::updateReal(const float &x, const float &y, const float &real_orientation,
+                               const float &real_curvature)
     {
         if (go_forward_)
         {

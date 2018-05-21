@@ -21,7 +21,7 @@ namespace kraken
         bool operator==(const Kinematic &rhs) const;
 
     protected:
-        void update_real(const float &x, const float &y, const float &real_orientation, const float &real_curvature);
+        void updateReal(const float &x, const float &y, const float &real_orientation, const float &real_curvature);
 
     protected:
         Vector2D position_;
