@@ -15,14 +15,13 @@ namespace kraken
                   const float &curvature, const bool &stop);
 
         void update(const ItineraryPoint &itineraryPoint);
-        void update(const float &x, const float &y, const float &geometric_orientation, const bool &go_forward,
-                    const float &geometric_curvature, const bool &stop);
+        void updateReal(const float &x, const float &y, const float &real_orientation, const float &real_curvature);
 
         bool operator==(const Kinematic &rhs) const;
 
     protected:
-        void updateReal(const float &x, const float &y, const float &real_orientation, const float &real_curvature);
-
+        void update(const float &x, const float &y, const float &geometric_orientation, const bool &go_forward,
+                    const float &geometric_curvature, const bool &stop);
     protected:
         Vector2D position_;
         float geometric_orientation_;
