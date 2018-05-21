@@ -10,7 +10,6 @@ namespace kraken
     class OrientedPosition2D
     {
     public:
-        OrientedPosition2D() = delete;
         OrientedPosition2D(const float &x, const float &y);
         OrientedPosition2D(const float &x, const float &y, const float &orientation);
 
