@@ -17,7 +17,8 @@ namespace kraken
         void update(const ItineraryPoint &itineraryPoint);
         void updateReal(const float &x, const float &y, const float &real_orientation, const float &real_curvature);
 
-        bool operator==(const Kinematic &rhs) const;
+        bool isSimilar(const Kinematic &rhs, const float &squaredDeltaPos,
+                       const float &deltaCurvature, const float &deltaOrientation) const;
 
     protected:
         void update(const float &x, const float &y, const float &geometric_orientation, const bool &go_forward,

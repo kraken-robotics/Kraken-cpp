@@ -27,11 +27,12 @@ namespace kraken
         update(x, y, orientation, go_forward, curvature, stop);
     }
 
-    bool Kinematic::operator==(const kraken::Kinematic &rhs) const
+    bool Kinematic::isSimilar(const Kinematic &rhs, const float &squaredDeltaPos,
+                              const float &deltaCurvature, const float &deltaOrientation) const
     {
-        return rhs.position_.squaredDistance(position_) < 50.f * 50.f
-               && std::abs(real_curvature_ - rhs.real_curvature_) < 2.f
-               && std::abs(real_orientation_ - rhs.real_orientation_) < static_cast<float>(M_PI) / 6.f
+        return rhs.position_.squaredDistance(position_) < squaredDeltaPos
+               && std::abs(real_curvature_ - rhs.real_curvature_) < deltaCurvature
+               && std::abs(real_orientation_ - rhs.real_orientation_) < deltaOrientation
                // TODO : use angle_difference
                && rhs.go_forward_ == go_forward_ && rhs.stop_ == stop_;
     }
