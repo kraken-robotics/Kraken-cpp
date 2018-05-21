@@ -11,7 +11,7 @@ namespace kraken
     {
     public:
         Obstacle(const Vector2D &rotation_center);
-        virtual ~Obstacle() = 0;
+        virtual ~Obstacle() = default;
         virtual bool isInObstacle(const Vector2D &pos) const = 0;
         virtual float squaredDistance(const Vector2D &pos) const = 0;
         virtual void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const = 0;

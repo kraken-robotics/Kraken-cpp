@@ -16,7 +16,6 @@ namespace kraken
     {
     public:
         CircularObstacle(const Vector2D &pos, float radius);
-        ~CircularObstacle() = 0;
         bool isInObstacle(const Vector2D &pos) const override;
         float squaredDistance(const Vector2D &pos) const override;
         void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const override;
