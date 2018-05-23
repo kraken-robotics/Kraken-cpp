@@ -58,6 +58,14 @@ namespace kraken
             vector_2d_list.push_back(Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_);
     }
 
+    bool CircularObstacle::operator==(const Obstacle &rhs) const
+    {
+        if(!Obstacle::operator==(rhs))
+            return false;
+
+        return radius_ == static_cast<const CircularObstacle&>(rhs).radius_;
+    }
+
 #if DEBUG
 
     std::ostream &operator<<(std::ostream &strm, const CircularObstacle &o)

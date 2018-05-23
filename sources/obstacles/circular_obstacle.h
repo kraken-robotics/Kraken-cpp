@@ -20,6 +20,7 @@ namespace kraken
         float squaredDistance(const Vector2D &pos) const override;
         void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const override;
         bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const override;
+        bool operator==(const Obstacle &rhs) const override;
 
 #if DEBUG
         friend std::ostream &operator<<(std::ostream &strm, const CircularObstacle &o);
