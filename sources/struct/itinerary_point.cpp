@@ -8,10 +8,8 @@ namespace kraken
                                    const float &orientation, const float &curvature,
                                    const bool &going_forward, const float &max_speed,
                                    const float &possible_speed, const bool &stop) :
-            pos_(pos),
-            orientation_(computeNewOrientation(orientation)), curvature_(curvature),
-            going_forward_(going_forward), max_speed_(max_speed),
-            possible_speed_(possible_speed), stop_(stop)
+            pos_(pos), orientation_(computeNewOrientation(orientation)), curvature_(curvature), max_speed_(max_speed),
+            possible_speed_(possible_speed), going_forward_(going_forward), stop_(stop)
     {
 
     }
