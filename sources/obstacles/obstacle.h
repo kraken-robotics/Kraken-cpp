@@ -6,6 +6,7 @@
 
 namespace kraken
 {
+    class RectangularObstacle;
 
     class Obstacle
     {
@@ -14,11 +15,13 @@ namespace kraken
         virtual ~Obstacle() = default;
         virtual bool isInObstacle(const Vector2D &pos) const = 0;
         virtual float squaredDistance(const Vector2D &pos) const = 0;
-        virtual void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const = 0;
+        virtual void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength,
+                                           std::vector<Vector2D> &vector_2d_list) const = 0;
         virtual bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const = 0;
+        virtual bool isColliding(const RectangularObstacle &obs) const = 0;
         virtual bool operator==(const Obstacle &rhs) const;
-        //virtual bool isColliding(RectangularObstacle obs)
 
+        const Vector2D &getRotationCenter() const;
     protected:
         Vector2D rotation_center_;
 

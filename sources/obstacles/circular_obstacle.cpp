@@ -1,5 +1,6 @@
 #include "obstacle.h"
 #include "circular_obstacle.h"
+#include "rectangular_obstacle.h"
 #include "../struct/vector_2d.h"
 #include <cmath>
 #include <typeinfo>
@@ -46,7 +47,8 @@ namespace kraken
         return isInObstacle(point_a) || isInObstacle(point_b);
     }
 
-    void CircularObstacle::getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const
+    void CircularObstacle::getExpandedConvexHull(const float &expansion, const float &longestAllowedLength,
+                                                 std::vector<Vector2D> &vector_2d_list) const
     {
         int nbPoints = std::ceil(M_2_PI * (radius_ + expansion) / longestAllowedLength);
         if (nbPoints < 3)
@@ -56,18 +58,27 @@ namespace kraken
         vector_2d_list.resize(nbPoints);
 
         for (int i = 0; i < nbPoints; ++i)
-            vector_2d_list.push_back(Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_);
+            vector_2d_list.push_back(
+                    Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_);
     }
 
     bool CircularObstacle::operator==(const Obstacle &rhs) const
     {
-        if(!Obstacle::operator==(rhs))
+        if (!Obstacle::operator==(rhs))
             return false;
 
-        if(typeid(*this) != typeid(rhs))
+        if (typeid(*this) != typeid(rhs))
             return false;
-        
-        return radius_ == static_cast<const CircularObstacle&>(rhs).radius_;
+
+        return radius_ == static_cast<const CircularObstacle &>(rhs).radius_;
+    }
+
+    bool CircularObstacle::isColliding(const RectangularObstacle &obs) const
+    {
+        if (rotation_center_.squaredDistance(obs.getRotationCenter()) >=
+            (radius_ + obs.getHalfDiagonal()) * (radius_ + obs.getHalfDiagonal()))
+            return false;
+        return obs.squaredDistance(rotation_center_) < squared_radius_;
     }
 
 #if DEBUG

@@ -186,7 +186,7 @@ namespace kraken
         y_ = y;
     }
 
-    bool Vector2D::segmentIntersection(Vector2D &point_A1, Vector2D &point_A2, Vector2D &point_B1, Vector2D &point_B2)
+    bool Vector2D::segmentIntersection(const Vector2D &point_A1, const Vector2D &point_A2, const Vector2D &point_B1, const Vector2D &point_B2)
     {
         // Source : https://stackoverflow.com/questions/3746274/line-intersection-with-aabb-rectangle
 
