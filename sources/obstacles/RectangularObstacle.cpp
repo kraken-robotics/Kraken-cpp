@@ -1,5 +1,6 @@
 #include "RectangularObstacle.h"
 #include <cmath>
+#include <vector>
 
 namespace kraken
 {
@@ -58,19 +59,92 @@ namespace kraken
 
     }
 
-    Vector2D RectangularObstacle::toObstacleCoordinateSystem(const Vector2D &point)
+    Vector2D RectangularObstacle::toObstacleCoordinateSystem(const Vector2D &point) const
     {
         Vector2D out;
-        out.setX(cos_ * (point.getX() - rotation_center_.getX()) + sin_ * (point.getY() - rotation_center_.getY()));
-        out.setY(-sin_ * (point.getX() - rotation_center_.getX()) + cos_ * (point.getY() - rotation_center_.getY()));
+        out.setX(getXToObstacleCoordinateSystem(point));
+        out.setY(getYToObstacleCoordinateSystem(point));
         return out;
     }
 
-    Vector2D RectangularObstacle::toTableCoordinateSystem(const Vector2D &point)
+    Vector2D RectangularObstacle::toTableCoordinateSystem(const Vector2D &point) const
     {
         Vector2D out;
         out.setX(cos_ * point.getX() - sin_ * point.getY() + rotation_center_.getX());
         out.setY(sin_ * point.getX() + cos_ * point.getY() + rotation_center_.getY());
         return out;
+    }
+
+    float RectangularObstacle::getXToObstacleCoordinateSystem(const Vector2D &point) const
+    {
+        return cos_ * (point.getX() - rotation_center_.getX()) + sin_ * (point.getY() - rotation_center_.getY());
+    }
+
+    float RectangularObstacle::getYToObstacleCoordinateSystem(const Vector2D &point) const
+    {
+        return -sin_ * (point.getX() - rotation_center_.getX()) + cos_ * (point.getY() - rotation_center_.getY());
+    }
+
+    void RectangularObstacle::getExpandedConvexHull(const float &expansion, const float &longestAllowedLength,
+                                                    std::vector<Vector2D> &vector_2d_list) const
+    {
+        float coeff = expansion / half_diagonal_;
+        Vector2D corners[] = {(right_bottom_corner_rotate_ - geometric_center_) * coeff + right_bottom_corner_rotate_,
+                              (right_upper_corner_rotate_ - geometric_center_) * coeff + right_upper_corner_rotate_,
+                              (left_upper_corner_rotate_ - geometric_center_) * coeff + left_upper_corner_rotate_,
+                              (left_bottom_corner_rotate_ - geometric_center_) * coeff + left_bottom_corner_rotate_};
+
+        vector_2d_list.clear();
+
+        for (auto const &point : point)
+            vector_2d_list.push_back(point);
+
+        for (int i = 0; i < 4; i++)
+        {
+            Vector2D pointA = corners[i];
+            Vector2D pointB = corners[(i + 1) % 4];
+            float distance = pointA.distance(pointB);
+            int nbPoints = static_cast<int>(std::ceil(distance / longestAllowedLength));
+            float delta = distance / nbPoints;
+            for (int j = 1; j < nbPoints; j++)
+                vector_2d_list.push_back((pointB - pointA) * ((j * delta) / distance) + pointA);
+        }
+    }
+
+    float RectangularObstacle::squaredDistance(const Vector2D &v) const
+    {
+        Vector2D in = toObstacleCoordinateSystem(v);
+
+        if (in.getX() < left_bottom_corner_.getX() && in.getY() < left_bottom_corner_.getY())
+            return in.squaredDistance(left_bottom_corner_);
+
+        if (in.getX() < left_upper_corner_.getX() && in.getY() > left_upper_corner_.getY())
+            return in.squaredDistance(left_upper_corner_);
+
+        if (in.getX() > right_bottom_corner_.getX() && in.getY() < right_bottom_corner_.getY())
+            return in.squaredDistance(right_bottom_corner_);
+
+        if (in.getX() > right_upper_corner_.getX() && in.getY() > right_upper_corner_.getY())
+            return in.squaredDistance(right_upper_corner_);
+
+        if (in.getX() > right_upper_corner_.getX())
+            return (in.getX() - right_upper_corner_.getX()) * (in.getX() - right_upper_corner_.getX());
+
+        if (in.getX() < left_bottom_corner_.getX())
+            return (in.getX() - left_bottom_corner_.getX()) * (in.getX() - left_bottom_corner_.getX());
+
+        if (in.getY() > right_upper_corner_.getY())
+            return (in.getY() - right_upper_corner_.getY()) * (in.getY() - right_upper_corner_.getY());
+
+        if (in.getY() < left_bottom_corner_.getY())
+            return (in.getY() - left_bottom_corner_.getY()) * (in.getY() - left_bottom_corner_.getY());
+
+        // else, v is in the obstacle
+        return 0;
+    }
+
+    float RectangularObstacle::getHalfDiagonal() const
+    {
+        return half_diagonal_;
     }
 }

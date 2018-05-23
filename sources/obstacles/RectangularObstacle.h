@@ -16,9 +16,16 @@ namespace kraken
         RectangularObstacle(const Vector2D &position, const int &size_left_x, const int &size_right_x, const int &size_up_y, const int &size_down_y, const float &angle);
         RectangularObstacle(const Vector2D &position, const Vector2D &top_right_corner, const Vector2D &bottom_left_corner, const float &angle);
 
+        void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const override;
+        float squaredDistance(const Vector2D &v) const override;
+
+        float getHalfDiagonal() const;
     protected:
-        Vector2D toObstacleCoordinateSystem(const Vector2D &point);
-        Vector2D toTableCoordinateSystem(const Vector2D &point);
+        Vector2D toObstacleCoordinateSystem(const Vector2D &point) const;
+        Vector2D toTableCoordinateSystem(const Vector2D &point) const;
+
+        float getXToObstacleCoordinateSystem(const Vector2D &point) const;
+        float getYToObstacleCoordinateSystem(const Vector2D &point) const;
     protected:
         float angle_;
         float cos_;
