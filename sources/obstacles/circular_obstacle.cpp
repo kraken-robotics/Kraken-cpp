@@ -2,6 +2,7 @@
 #include "circular_obstacle.h"
 #include "../struct/vector_2d.h"
 #include <cmath>
+#include <typeinfo>
 
 namespace kraken
 {
@@ -63,6 +64,9 @@ namespace kraken
         if(!Obstacle::operator==(rhs))
             return false;
 
+        if(typeid(*this) != typeid(rhs))
+            return false;
+        
         return radius_ == static_cast<const CircularObstacle&>(rhs).radius_;
     }
 
