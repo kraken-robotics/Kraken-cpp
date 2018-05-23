@@ -1,7 +1,7 @@
 #ifndef TESTS_RECTANGULAR_OBSTACLE_H
 #define TESTS_RECTANGULAR_OBSTACLE_H
 
-#include "Obstacle.h"
+#include "obstacle.h"
 #include "../struct/vector_2d.h"
 
 namespace kraken
