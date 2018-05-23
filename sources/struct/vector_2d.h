@@ -19,6 +19,7 @@ namespace kraken
         Vector2D operator-(const Vector2D &rhs) const;
         Vector2D &operator-=(const Vector2D &rhs);
         Vector2D &operator*=(const float &d);
+        Vector2D operator*(const float &d) const;
         bool operator==(const Vector2D &rhs) const;
         bool operator!=(const Vector2D &rhs) const;
         float dot(const Vector2D &other) const;

@@ -40,6 +40,11 @@ namespace kraken
         return *this;
     }
 
+    Vector2D Vector2D::operator*(const float &d) const
+    {
+        return Vector2D(x_ * d, y_ * d);
+    }
+
     Vector2D &Vector2D::operator*=(const float &d)
     {
         x_ *= d;
