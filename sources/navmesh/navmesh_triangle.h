@@ -17,13 +17,6 @@ namespace kraken
         bool isInside(const Vector2D &pos);
         bool operator==(const NavmeshTriangle &tr);
 
-        static float crossProduct(const Vector2D &point_a, const Vector2D &point_b,
-                                  const Vector2D &point_c); // TODO : in math_utils ?
-        static bool checkCounterclockwise(const Vector2D &point_a, const Vector2D &point_b,
-                                          const Vector2D &point_c); // TODO : in math_utils ?
-        static bool isInside(const Vector2D &pos, const Vector2D &point_a, const Vector2D &point_b,
-                             const Vector2D &point_c); // TODO : in math_utils ?
-
     private:
         void updateArea();
         bool checkTriangle(const NavmeshEdge &e1, const NavmeshEdge &e2, const NavmeshEdge &e3) const;

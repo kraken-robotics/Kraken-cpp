@@ -35,11 +35,6 @@ namespace kraken
 
         bool operator==(const NavmeshEdge &rhs) const;
 
-        static bool isCircumscribed(const Vector2D &point_a, const Vector2D &point_b, const Vector2D &point_c,
-                             const Vector2D &point_d); // TODO : math utils ?
-        static bool containsNode(const Vector2D &point_a, const Vector2D &point_b,
-                          const Vector2D &point_c); // TODO : math utils ?
-
     private:
         bool flip(bool force);
         bool checkNbTriangles() const;
