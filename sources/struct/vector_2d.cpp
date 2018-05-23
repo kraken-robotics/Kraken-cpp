@@ -80,14 +80,14 @@ namespace kraken
         return std::max(dx, dy) + 0.414f * std::min(dx, dy);
     }
 
-    Vector2D &Vector2D::Ysym(bool do_symmetry)
+    Vector2D &Vector2D::Ysym(const bool &do_symmetry)
     {
         if (do_symmetry)
             y_ = -y_;
         return *this;
     }
 
-    Vector2D Vector2D::rotate(float angle, const Vector2D &rotation_center) const
+    Vector2D Vector2D::rotate(const float &angle, const Vector2D &rotation_center) const
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -96,7 +96,7 @@ namespace kraken
         return Vector2D(x, y);
     }
 
-    void Vector2D::rotate(float angle, const Vector2D &rotation_center)
+    void Vector2D::rotate(const float &angle, const Vector2D &rotation_center)
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -105,7 +105,7 @@ namespace kraken
         x_ = tmp_x;
     }
 
-    Vector2D &Vector2D::rotate(float angle)
+    Vector2D &Vector2D::rotate(const float &angle)
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -115,7 +115,7 @@ namespace kraken
         return *this;
     }
 
-    Vector2D &Vector2D::rotate(float cos, float sin)
+    Vector2D &Vector2D::rotate(const float &cos, const float &sin)
     {
         assert(std::abs(1 - cos * cos - sin * sin) < 0.01f);
         float old_x = x_;

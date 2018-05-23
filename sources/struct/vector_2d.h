@@ -26,11 +26,11 @@ namespace kraken
         float squaredDistance(const Vector2D &other) const;
         float distance(const Vector2D &other) const;
         float distanceFast(const Vector2D &other) const;
-        Vector2D &Ysym(bool do_symmetry);
-        Vector2D rotate(float angle, const Vector2D &rotation_center) const;
-        void rotate(float angle, const Vector2D &rotation_center);
-        Vector2D &rotate(float angle);
-        Vector2D &rotate(float cos, float sin);
+        Vector2D &Ysym(const bool &do_symmetry);
+        Vector2D rotate(const float &angle, const Vector2D &rotation_center) const;
+        void rotate(const float &angle, const Vector2D &rotation_center);
+        Vector2D &rotate(const float &angle);
+        Vector2D &rotate(const float &cos, const float &sin);
         float getArgument() const;
         float getFastArgument() const;
         float squaredNorm() const;
