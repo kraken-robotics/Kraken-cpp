@@ -58,7 +58,7 @@ namespace kraken
          * @param pointB2
          * @return
          */
-        static bool segmentIntersection(Vector2D &pointA1, Vector2D &pointA2, Vector2D &pointB1, Vector2D &pointB2);
+        static bool segmentIntersection(const Vector2D &pointA1, const Vector2D &pointA2, const Vector2D &pointB1, const Vector2D &pointB2);
         static Vector2D fromPolar(float radius, float angle);
     protected:
         float x_;
