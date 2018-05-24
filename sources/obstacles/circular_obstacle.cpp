@@ -54,9 +54,6 @@ namespace kraken
         if (nbPoints < 3)
             nbPoints = 3;
 
-        vector_2d_list.clear();
-        vector_2d_list.resize(nbPoints);
-
         for (int i = 0; i < nbPoints; ++i)
             vector_2d_list.push_back(
                     Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_);
