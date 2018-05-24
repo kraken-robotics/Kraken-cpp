@@ -114,8 +114,6 @@ namespace kraken
                               (left_upper_corner_rotate_ - geometric_center_) * coeff + left_upper_corner_rotate_,
                               (left_bottom_corner_rotate_ - geometric_center_) * coeff + left_bottom_corner_rotate_};
 
-        vector_2d_list.clear();
-
         for (auto const &point : corners)
             vector_2d_list.push_back(point);
 
