@@ -5,13 +5,13 @@
 
 namespace kraken
 {
-    CompoundObstacle::CompoundObstacle(const kraken::Vector2D &rotation_center,
-                                       std::vector<kraken::Obstacle> obstacles_list) :
+    CompoundObstacle::CompoundObstacle(const Vector2D &rotation_center,
+                                       std::vector<Obstacle> obstacles_list) :
             Obstacle(rotation_center), obstacles_list_(std::move(obstacles_list))
     {
     }
 
-    bool CompoundObstacle::isInObstacle(const kraken::Vector2D &pos) const
+    bool CompoundObstacle::isInObstacle(const Vector2D &pos) const
     {
         for (auto const &o : obstacles_list_)
         {
@@ -22,7 +22,7 @@ namespace kraken
         return false;
     }
 
-    float CompoundObstacle::squaredDistance(const kraken::Vector2D &pos) const
+    float CompoundObstacle::squaredDistance(const Vector2D &pos) const
     {
         float min = std::numeric_limits<float>::max();
         for (auto const &o : obstacles_list_)
@@ -35,13 +35,13 @@ namespace kraken
     }
 
     void CompoundObstacle::getExpandedConvexHull(const float &expansion, const float &longestAllowedLength,
-                                                 std::vector<kraken::Vector2D> &vector_2d_list) const
+                                                 std::vector<Vector2D> &vector_2d_list) const
     {
         for (const auto &o : obstacles_list_)
             o.getExpandedConvexHull(expansion, longestAllowedLength, vector_2d_list);
     }
 
-    bool CompoundObstacle::isColliding(const kraken::Vector2D &point_a, const kraken::Vector2D &point_b) const
+    bool CompoundObstacle::isColliding(const Vector2D &point_a, const Vector2D &point_b) const
     {
         for (auto const &o : obstacles_list_)
         {
@@ -51,7 +51,7 @@ namespace kraken
         return false;
     }
 
-    bool CompoundObstacle::isColliding(const kraken::RectangularObstacle &obs) const
+    bool CompoundObstacle::isColliding(const RectangularObstacle &obs) const
     {
         for (auto const &o : obstacles_list_)
         {
