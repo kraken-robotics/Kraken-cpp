@@ -10,7 +10,7 @@ namespace kraken
     class CompoundObstacle : public Obstacle
     {
     public:
-        CompoundObstacle(const Vector2D &rotation_center, std::vector<kraken::Obstacle> obstacles_list);
+        CompoundObstacle(const Vector2D &rotation_center, std::vector<Obstacle> obstacles_list);
 
         bool isInObstacle(const Vector2D &pos) const override;
         float squaredDistance(const Vector2D &pos) const override;
