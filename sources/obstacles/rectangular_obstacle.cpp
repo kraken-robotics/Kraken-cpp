@@ -1,6 +1,7 @@
 #include "rectangular_obstacle.h"
 #include <cmath>
 #include <vector>
+#include <typeinfo>
 
 namespace kraken
 {
@@ -187,6 +188,19 @@ namespace kraken
     float RectangularObstacle::getHalfDiagonal() const
     {
         return half_diagonal_;
+    }
+
+    bool RectangularObstacle::operator==(const Obstacle &rhs) const
+    {
+        if (!Obstacle::operator==(rhs))
+            return false;
+
+        if (typeid(*this) != typeid(rhs))
+            return false;
+
+        RectangularObstacle ro_rhs = static_cast<const RectangularObstacle &>(rhs);
+        return angle_ == ro_rhs.angle_ && left_bottom_corner_ == ro_rhs.left_bottom_corner_ &&
+               right_upper_corner_ == ro_rhs.right_upper_corner_;
     }
 
     bool RectangularObstacle::test_separation(const float &a, const float &b, const float &a2, const float &b2,
