@@ -59,18 +59,13 @@ namespace kraken
 
     Vector2D RectangularObstacle::toObstacleCoordinateSystem(const Vector2D &point) const
     {
-        Vector2D out;
-        out.setX(getXToObstacleCoordinateSystem(point));
-        out.setY(getYToObstacleCoordinateSystem(point));
-        return out;
+        return Vector2D(getXToObstacleCoordinateSystem(point), getYToObstacleCoordinateSystem(point));
     }
 
     Vector2D RectangularObstacle::toTableCoordinateSystem(const Vector2D &point) const
     {
-        Vector2D out;
-        out.setX(cos_ * point.getX() - sin_ * point.getY() + rotation_center_.getX());
-        out.setY(sin_ * point.getX() + cos_ * point.getY() + rotation_center_.getY());
-        return out;
+        return Vector2D(cos_ * point.getX() - sin_ * point.getY() + rotation_center_.getX(),
+                        sin_ * point.getX() + cos_ * point.getY() + rotation_center_.getY());
     }
 
     float RectangularObstacle::getXToObstacleCoordinateSystem(const Vector2D &point) const
