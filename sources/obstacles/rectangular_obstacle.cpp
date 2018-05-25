@@ -4,46 +4,23 @@
 
 namespace kraken
 {
-
-    RectangularObstacle::RectangularObstacle(const Vector2D &position, const int &size_x, const int &size_y) :
-            RectangularObstacle(position, size_x, size_y, 0)
-    {
-
-    }
-
-    RectangularObstacle::RectangularObstacle(const Vector2D &position, const int &size_x, const int &size_y,
+    RectangularObstacle::RectangularObstacle(const int &size_x, const int &size_y, const Vector2D &position,
                                              const float &angle) :
-            RectangularObstacle(position, size_x / 2, size_x / 2, size_y / 2, size_y / 2, angle)
+            RectangularObstacle(size_x / 2, size_x / 2, size_y / 2, size_y / 2, position, angle)
     {
 
     }
 
-    RectangularObstacle::RectangularObstacle(const int &distance_to_front, const int &distance_to_back,
-                                             const int &distance_to_left, const int &distance_to_right) :
-            RectangularObstacle(distance_to_front, distance_to_back, distance_to_left, distance_to_right, 0)
-    {
-
-    }
-
-    RectangularObstacle::RectangularObstacle(const int &distance_to_front, const int &distance_to_back,
-                                             const int &distance_to_left, const int &distance_to_right,
-                                             const float &tilt_angle) :
-            RectangularObstacle(Vector2D(0, 0), distance_to_back, distance_to_front, distance_to_left,
-                                distance_to_right, tilt_angle)
-    {
-
-    }
-
-    RectangularObstacle::RectangularObstacle(const Vector2D &position, const int &size_left_x, const int &size_right_x,
-                                             const int &size_up_y, const int &size_down_y, const float &angle) :
-            RectangularObstacle(position, Vector2D(size_right_x, size_up_y), Vector2D(-size_left_x, -size_down_y),
+    RectangularObstacle::RectangularObstacle(const int &size_left_x, const int &size_right_x, const int &size_up_y,
+                                             const int &size_down_y, const Vector2D &position, const float &angle) :
+            RectangularObstacle(Vector2D(size_right_x, size_up_y), Vector2D(-size_left_x, -size_down_y), position,
                                 angle)
     {
 
     }
 
-    RectangularObstacle::RectangularObstacle(const Vector2D &position, const Vector2D &top_right_corner,
-                                             const Vector2D &bottom_left_corner, const float &angle) :
+    RectangularObstacle::RectangularObstacle(const Vector2D &top_right_corner, const Vector2D &bottom_left_corner,
+                                             const Vector2D &position, const float &angle) :
             Obstacle(position), angle_(angle), cos_(std::cos(angle)), sin_(std::sin(angle)),
             left_bottom_corner_(bottom_left_corner),
             left_upper_corner_(bottom_left_corner.getX(), top_right_corner.getY()),
