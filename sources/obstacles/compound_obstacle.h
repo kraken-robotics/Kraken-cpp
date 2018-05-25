@@ -19,6 +19,8 @@ namespace kraken
         bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const override;
         bool isColliding(const RectangularObstacle &obs) const override;
 
+        bool operator==(const Obstacle &rhs) const override;
+
     protected:
         const std::vector<Obstacle> obstacles_list_;
     };
