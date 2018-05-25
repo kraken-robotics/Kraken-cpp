@@ -28,6 +28,8 @@ namespace kraken
         bool isColliding(const RectangularObstacle &obs) const override;
 
         float getHalfDiagonal() const;
+        bool operator==(const Obstacle &rhs) const override;
+
     protected:
         Vector2D toObstacleCoordinateSystem(const Vector2D &point) const;
         Vector2D toTableCoordinateSystem(const Vector2D &point) const;
