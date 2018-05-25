@@ -9,17 +9,13 @@ namespace kraken
     class RectangularObstacle : public Obstacle
     {
     public:
-        RectangularObstacle(const Vector2D &position, const int &size_x, const int &size_y);
-        RectangularObstacle(const Vector2D &position, const int &size_x, const int &size_y, const float &angle);
+        RectangularObstacle(const int &size_x, const int &size_y, const Vector2D &position = Vector2D(0, 0),
+                            const float &angle = 0);
         RectangularObstacle(const int &distance_to_front, const int &distance_to_back, const int &distance_to_left,
-                            const int &distance_to_right);
-        RectangularObstacle(const int &distance_to_front, const int &distancesquaredDistance_to_back,
-                            const int &distance_to_left,
-                            const int &distance_to_right, const float &tilt_angle);
-        RectangularObstacle(const Vector2D &position, const int &size_left_x, const int &size_right_x,
-                            const int &size_up_y, const int &size_down_y, const float &angle);
-        RectangularObstacle(const Vector2D &position, const Vector2D &top_right_corner,
-                            const Vector2D &bottom_left_corner, const float &angle);
+                            const int &distance_to_right, const Vector2D &position = Vector2D(0, 0),
+                            const float &tilt_angle = 0);
+        RectangularObstacle(const Vector2D &top_right_corner, const Vector2D &bottom_left_corner,
+                            const Vector2D &position = Vector2D(0, 0), const float &angle = 0);
 
         void update(const Vector2D &position, const float &orientation);
         void update(const float &x, const float &y, const float &orientation);
