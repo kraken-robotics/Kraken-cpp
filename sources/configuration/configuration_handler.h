@@ -101,13 +101,13 @@ namespace kraken {
 
         void changeModuleSection(std::vector<ConfigModule> &&modules, std::string new_section);
 
-        long getInt(ConfigKey key, ConfigModule module);
+        long getInt(ConfigKey key, ConfigModule module_enum);
 
-        double getDouble(ConfigKey key, ConfigModule module);
+        double getDouble(ConfigKey key, ConfigModule module_enum);
 
-        bool getBool(ConfigKey key, ConfigModule module);
+        bool getBool(ConfigKey key, ConfigModule module_enum);
 
-        std::string getString(ConfigKey key, ConfigModule module);
+        std::string getString(ConfigKey key, ConfigModule module_enum);
 
         long getInt(ConfigKey key);
 
@@ -126,7 +126,7 @@ namespace kraken {
 
         std::string getKeyName(ConfigKey key);
 
-        ConfigurationModule* getModule(ConfigModule module);
+        ConfigurationModule* getModule(ConfigModule module_enum);
 
         //Helper function for default values initialization
         template<typename T>

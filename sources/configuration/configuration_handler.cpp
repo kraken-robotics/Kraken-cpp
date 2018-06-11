@@ -10,31 +10,31 @@ namespace kraken
         setDefaultValues();
     }
 
-    long ConfigurationHandler::getInt(ConfigKey key, ConfigModule module)
+    long ConfigurationHandler::getInt(ConfigKey key, ConfigModule module_enum)
     {
         auto defaultValue = static_cast<int>(default_values_[static_cast<int>(key)].numeric_value);
-        auto sectionName = getSectionName(module);
+        auto sectionName = getSectionName(module_enum);
         return ini_reader_.GetInteger(sectionName, getKeyName(key), defaultValue);
     }
 
-    double ConfigurationHandler::getDouble(ConfigKey key, ConfigModule module)
+    double ConfigurationHandler::getDouble(ConfigKey key, ConfigModule module_enum)
     {
         auto defaultValue = default_values_[static_cast<int>(key)].numeric_value;
-        auto sectionName = getSectionName(module);
+        auto sectionName = getSectionName(module_enum);
         return ini_reader_.GetReal(sectionName, getKeyName(key), defaultValue);
     }
 
-    bool ConfigurationHandler::getBool(ConfigKey key, ConfigModule module)
+    bool ConfigurationHandler::getBool(ConfigKey key, ConfigModule module_enum)
     {
         auto defaultValue = default_values_[static_cast<int>(key)].boolean_value;
-        auto sectionName = getSectionName(module);
+        auto sectionName = getSectionName(module_enum);
         return ini_reader_.GetBoolean(sectionName, getKeyName(key), defaultValue);
     }
 
-    std::string ConfigurationHandler::getString(ConfigKey key, ConfigModule module)
+    std::string ConfigurationHandler::getString(ConfigKey key, ConfigModule module_enum)
     {
         auto defaultValue = default_values_[static_cast<int>(key)].string_value;
-        auto sectionName = getSectionName(module);
+        auto sectionName = getSectionName(module_enum);
         return ini_reader_.Get(sectionName, getKeyName(key), defaultValue);
     }
 
@@ -60,27 +60,27 @@ namespace kraken
 
     void ConfigurationHandler::registerCallback(ConfigModule module_enum, ConfigurationCallback callback)
     {
-        auto module = getModule(module_enum);
-        if(module)
+        auto module_instance = getModule(module_enum);
+        if(module_instance)
         {
-            module->registerCallback(std::move(callback));
+            module_instance->registerCallback(std::move(callback));
         }
     }
 
     void ConfigurationHandler::changeModuleSection(ConfigModule module_enum, std::string new_section)
     {
-        auto module = getModule(module_enum);
-        if(module)
+        auto module_instance = getModule(module_enum);
+        if(module_instance)
         {
-            module->changeSection(*this, std::move(new_section));
+            module_instance->changeSection(*this, std::move(new_section));
         }
     }
 
     void ConfigurationHandler::changeModuleSection(std::vector<ConfigModule>&& modules, std::string new_section)
     {
-        for(auto module : modules)
+        for(auto module_instance : modules)
         {
-            changeModuleSection(module, new_section);
+            changeModuleSection(module_instance, new_section);
         }
     }
 
@@ -119,9 +119,9 @@ namespace kraken
         }
     }
 
-    ConfigurationModule* ConfigurationHandler::getModule(ConfigModule module)
+    ConfigurationModule* ConfigurationHandler::getModule(ConfigModule module_enum)
     {
-        auto moduleId = static_cast<unsigned int>(module);
+        auto moduleId = static_cast<unsigned int>(module_enum);
         if(moduleId < module_count)
         {
             return &modules_[moduleId];
