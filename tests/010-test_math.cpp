@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "catch/catch.hpp"
 #include <cmath>
 #include "../sources/struct/vector_2d.h"
 
