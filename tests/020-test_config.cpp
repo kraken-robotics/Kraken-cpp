@@ -35,7 +35,7 @@ TEST_CASE("Configuration", "[Configuration]")
             //Test section change on both modules.
             //Navmesh is first in the changeSection call, so EnableDebug is false.
             REQUIRE (ch.getInt(ConfigKey::LongestEdgeInNavmesh) == 2);
-            REQUIRE (ch.getBool(ConfigKey::EnableDebug));
+            REQUIRE (!ch.getBool(ConfigKey::EnableDebug));
         }
         passCount++;
     });
@@ -47,7 +47,7 @@ TEST_CASE("Configuration", "[Configuration]")
         {
             //Test section change on module ResearchMechanical
             REQUIRE (ch.getInt(ConfigKey::LongestEdgeInNavmesh) == 1);
-            REQUIRE (ch.getBool(ConfigKey::EnableDebug));
+            REQUIRE (!ch.getBool(ConfigKey::EnableDebug));
         }
         else if(passCount == 1)
         {

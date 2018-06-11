@@ -1,6 +1,5 @@
 #include "configuration_handler.h"
 
-
 namespace kraken
 {
     ConfigurationHandler::ConfigurationHandler(const std::string& filename) :
@@ -62,7 +61,7 @@ namespace kraken
     void ConfigurationHandler::registerCallback(ConfigModule module_enum, ConfigurationCallback callback)
     {
         auto module = getModule(module_enum);
-        if(module.has_value())
+        if(module)
         {
             module->registerCallback(std::move(callback));
         }
@@ -71,7 +70,7 @@ namespace kraken
     void ConfigurationHandler::changeModuleSection(ConfigModule module_enum, std::string new_section)
     {
         auto module = getModule(module_enum);
-        if(module.has_value())
+        if(module)
         {
             module->changeSection(*this, std::move(new_section));
         }
@@ -92,7 +91,7 @@ namespace kraken
 
     std::string ConfigurationHandler::getKeyName(ConfigKey key)
     {
-        return std::string(configuration_key_string_values[static_cast<int>(key)]);
+        return configuration_key_string_values[static_cast<int>(key)];
     }
 
     ConfigModule ConfigurationHandler::getModuleEnumFromKeyEnum(ConfigKey key) const noexcept
@@ -120,16 +119,16 @@ namespace kraken
         }
     }
 
-    std::optional<ConfigurationModule> ConfigurationHandler::getModule(ConfigModule module)
+    ConfigurationModule* ConfigurationHandler::getModule(ConfigModule module)
     {
         auto moduleId = static_cast<unsigned int>(module);
         if(moduleId < module_count)
         {
-            return modules_[moduleId];
+            return &modules_[moduleId];
         }
         else
         {
-            return std::nullopt;
+            return nullptr;
         }
     }
 

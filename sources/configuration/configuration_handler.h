@@ -127,7 +127,7 @@ namespace kraken {
 
         std::string getKeyName(ConfigKey key);
 
-        std::optional<ConfigurationModule> getModule(ConfigModule module);
+        ConfigurationModule* getModule(ConfigModule module);
 
         //Helper function for default values initialization
         template<typename T>
@@ -142,7 +142,7 @@ namespace kraken {
         static constexpr unsigned long module_count = (unsigned long) ConfigModule::Tentacle + 1;
 
         //The array that keeps the string values of the ConfigKeys
-        static constexpr std::string_view configuration_key_string_values[] = {
+        const std::string configuration_key_string_values[configuration_key_count] = {
                 "NavmeshObstaclesDilatation", "LargestTriangleAreaInNavmesh", "LongestEdgeInNavmesh", "NavmeshFilename",
                 "NecessaryMargin", "PreferedMargin", "MarginBeforeCollision", "InitialMargin", "MaxCurvatureDerivative",
                 "MaxLateralAcceleration", "MaxLinearAcceleration", "DefaultMaxSpeed", "MinimalSpeed", "MaxCurvature",
