@@ -7,7 +7,7 @@ TEST_CASE("Configuration", "[Configuration]")
     using kraken::ConfigurationHandler;
     using kraken::ConfigModule;
     using kraken::ConfigKey;
-    ConfigurationHandler handler{"test.ini"};
+    ConfigurationHandler handler{"../tests/test.ini"};
 
     //Test default section load
     REQUIRE (handler.getInt(ConfigKey::LongestEdgeInNavmesh) == 9);
