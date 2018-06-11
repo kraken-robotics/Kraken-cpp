@@ -3,7 +3,6 @@
 
 #include <string>
 #include <functional>
-#include <optional>
 
 #include "configuration_module.h"
 #include "iniReader/INIReader.h"
