@@ -59,11 +59,7 @@ namespace kraken
             return (x_ - other.x_) * (x_ - other.x_) + (y_ - other.y_) * (y_ - other.y_);
         }
 
-        constexpr float distance(const Vector2D &other) const
-        {
-            return std::sqrt(squaredDistance(other));
-        }
-
+        float distance(const Vector2D &other) const;
         float distanceFast(const Vector2D &other) const noexcept;
         Vector2D &Ysym(bool do_symmetry) noexcept;
         Vector2D rotate(const float &angle, const Vector2D &rotation_center) const noexcept;
@@ -77,10 +73,7 @@ namespace kraken
             return x_ * x_ + y_ * y_;
         }
 
-        constexpr float norm() const
-        {
-            return std::sqrt(squaredNorm());
-        }
+        float norm() const;
 
         /**
          * The distance is in μm !
@@ -113,10 +106,7 @@ namespace kraken
         static bool segmentIntersection(const Vector2D &point_A1, const Vector2D &point_A2, const Vector2D &point_B1,
                                         const Vector2D &point_B2) noexcept;
 
-        constexpr static Vector2D fromPolar(float radius, float angle) noexcept
-        {
-            return {std::cos(angle) * radius, std::sin(angle) * radius};
-        }
+        static Vector2D fromPolar(float radius, float angle) noexcept;
 
     protected:
         float x_;

@@ -24,6 +24,11 @@ namespace kraken
         return *this;
     }
 
+    float Vector2D::distance(const Vector2D &other) const
+    {
+        return std::sqrt(squaredDistance(other));
+    }
+
     float Vector2D::distanceFast(const Vector2D &other) const noexcept
     {
         float dx = std::abs(x_ - other.x_);
@@ -95,6 +100,11 @@ namespace kraken
         return static_cast<float>(r);
     }
 
+    float Vector2D::norm() const
+    {
+        return std::sqrt(squaredNorm());
+    }
+
     int Vector2D::distanceOctile(const Vector2D &other) const noexcept
     {
         float dx = std::abs(x_ - other.x_);
@@ -137,10 +147,16 @@ namespace kraken
         return true;
     }
 
+    Vector2D Vector2D::fromPolar(float radius, float angle) noexcept
+    {
+        return {std::cos(angle) * radius, std::sin(angle) * radius};
+    }
+
 #if DEBUG
     std::ostream &operator<<(std::ostream &strm, const Vector2D &v)
     {
         return strm << "Vector2D(" << v.x_ << "," << v.y_ << ")" << std::endl;
     }
+
 #endif
 }
