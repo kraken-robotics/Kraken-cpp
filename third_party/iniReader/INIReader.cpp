@@ -12,12 +12,6 @@
 #include <iostream>
 #endif
 
-INIReader::INIReader()
-{
-
-}
-
-
 INIReader::INIReader(std::string filename)
 {
     _error = ini_parse(filename.c_str(), ValueHandler, this);
@@ -42,13 +36,13 @@ int INIReader::ParseError()
     return _error;
 }
 
-std::string INIReader::Get(std::string section, std::string name, std::string default_value)
+std::string INIReader::Get(const std::string& section, const std::string& name, std::string default_value)
 {
     std::string key = MakeKey(section, name);
     return _values.count(key) ? _values[key] : default_value;
 }
 
-long INIReader::GetInteger(std::string section, std::string name, long default_value)
+long INIReader::GetInteger(const std::string& section, const std::string& name, long default_value)
 {
     std::string valstr = Get(section, name, "");
     const char* value = valstr.c_str();
@@ -58,7 +52,7 @@ long INIReader::GetInteger(std::string section, std::string name, long default_v
     return end > value ? n : default_value;
 }
 
-double INIReader::GetReal(std::string section, std::string name, double default_value)
+double INIReader::GetReal(const std::string& section, const std::string& name, double default_value)
 {
     std::string valstr = Get(section, name, "");
     const char* value = valstr.c_str();
@@ -67,7 +61,7 @@ double INIReader::GetReal(std::string section, std::string name, double default_
     return end > value ? n : default_value;
 }
 
-bool INIReader::GetBoolean(std::string section, std::string name, bool default_value)
+bool INIReader::GetBoolean(const std::string& section, const std::string& name, bool default_value)
 {
     std::string valstr = Get(section, name, "");
     // Convert to lower case to make std::string comparisons case-insensitive
@@ -85,11 +79,11 @@ std::set<std::string> INIReader::GetSections() const
     return _sections;
 }
 
-std::set<std::string> INIReader::GetFields(std::string section) const
+std::set<std::string> INIReader::GetFields(const std::string& section) const
 {
     std::string sectionKey = section;
     std::transform(sectionKey.begin(), sectionKey.end(), sectionKey.begin(), ::tolower);
-    std::map<std::string, std::set<std::string>*>::const_iterator fieldSetIt = _fields.find(sectionKey);
+    auto fieldSetIt = _fields.find(sectionKey);
     if(fieldSetIt==_fields.end())
         return std::set<std::string>();
     return *(fieldSetIt->second);
@@ -106,11 +100,11 @@ std::string INIReader::MakeKey(std::string section, std::string name)
 int INIReader::ValueHandler(void* user, const char* section, const char* name,
                             const char* value)
 {
-    INIReader* reader = (INIReader*)user;
+    auto reader = (INIReader*)user;
 
     // Add the value to the lookup map
     std::string key = MakeKey(section, name);
-    if (reader->_values[key].size() > 0)
+    if (reader->_values[key].empty())
         reader->_values[key] += "\n";
     reader->_values[key] += value;
 
@@ -122,7 +116,7 @@ int INIReader::ValueHandler(void* user, const char* section, const char* name,
     std::transform(sectionKey.begin(), sectionKey.end(), sectionKey.begin(), ::tolower);
 
     std::set<std::string>* fieldsSet;
-    std::map<std::string, std::set<std::string>*>::iterator fieldSetIt = reader->_fields.find(sectionKey);
+    auto fieldSetIt = reader->_fields.find(sectionKey);
     if(fieldSetIt==reader->_fields.end())
     {
         fieldsSet = new std::set<std::string>();
@@ -136,31 +130,31 @@ int INIReader::ValueHandler(void* user, const char* section, const char* name,
 }
 
 template<>
-long INIReader::get<long>(std::string sectionName, std::string name, long default_value)
+long INIReader::get<long>(const std::string& sectionName, const std::string& name, long default_value)
 {
     return GetInteger(sectionName, name, default_value);
 }
 
 template<>
-int INIReader::get<int>(std::string sectionName, std::string name, int default_value)
+int INIReader::get<int>(const std::string& sectionName, const std::string& name, int default_value)
 {
     return static_cast<int>(get<long>(sectionName, name, default_value));
 }
 
 template<>
-double INIReader::get<double>(std::string sectionName, std::string name, double default_value)
+double INIReader::get<double>(const std::string& sectionName, const std::string& name, double default_value)
 {
     return GetReal(sectionName, name, default_value);
 }
 
 template<>
-bool INIReader::get<bool>(std::string sectionName, std::string name, bool default_value)
+bool INIReader::get<bool>(const std::string& sectionName, const std::string& name, bool default_value)
 {
     return GetBoolean(sectionName, name, default_value);
 }
 
 template<>
-std::string INIReader::get<std::string>(std::string sectionName, std::string name, std::string default_value)
+std::string INIReader::get<std::string>(const std::string& sectionName, const std::string& name, std::string default_value)
 {
-    return Get(sectionName, name, default_value);
+    return Get(sectionName, name, std::move(default_value));
 }

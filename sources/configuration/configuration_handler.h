@@ -89,7 +89,7 @@ namespace kraken {
 
             explicit ConfigurationParameter(bool value) { boolean_value = value; }
 
-            explicit ConfigurationParameter(std::string value) { string_value = value; }
+            explicit ConfigurationParameter(const std::string& value) { string_value = value; }
         };
 
     public:
