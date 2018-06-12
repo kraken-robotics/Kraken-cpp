@@ -37,13 +37,13 @@ namespace kraken
 
     void ConfigurationHandler::registerCallback(ConfigModule module_enum, ConfigurationCallback callback)
     {
-        auto module_instance = getModule(module_enum)
+        auto module_instance = getModule(module_enum);
         module_instance->registerCallback(std::move(callback));
     }
 
     void ConfigurationHandler::changeModuleSection(ConfigModule module_enum, std::string new_section)
     {
-        auto module_instance = getModule(module_enum)
+        auto module_instance = getModule(module_enum);
         module_instance->changeSection(*this, std::move(new_section));
     }
 
@@ -67,27 +67,11 @@ namespace kraken
 
     ConfigModule ConfigurationHandler::getModuleEnumFromKeyEnum(ConfigKey key) const noexcept
     {
-        //I'm not proud of this function, but I could'nt find a better solution yet.
-        if(key < ConfigKey::NecessaryMargin)
-        {
-            return ConfigModule::Navmesh;
+        for (auto pair : modules_limits) {
+            if (key < pair.first)  return pair.second;
         }
-        else if(key < ConfigKey::MaxCurvatureDerivative)
-        {
-            return ConfigModule::Autoreplanning;
-        }
-        else if(key < ConfigKey::NodeMemoryPoolSize)
-        {
-            return ConfigModule::ResearchMechanical;
-        }
-        else if(key < ConfigKey::PrecisionTrace)
-        {
-            return ConfigModule::Memory;
-        }
-        else
-        {
-            return ConfigModule::Tentacle;
-        }
+        // none of the above
+        return ConfigModule::Tentacle;
     }
 
     ConfigurationModule* ConfigurationHandler::getModule(ConfigModule module_enum)

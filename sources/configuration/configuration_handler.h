@@ -13,8 +13,8 @@ namespace kraken {
      * - The enumeration values are used as keys in a vector, they need to be a contiguous range of integers.
      * - NbPoints is used to initialize the size of said vector.
      * - The enumerations are ordered by module (see ConfigModule). If you have to modify this enum, keep the groups in the
-     * same order and let the first key of each group at the first place. If you don't do this, update the function
-     * getModuleEnumFromKeyEnum according to your changes.
+     * same order and let the first key of each group at the first place. If you don't do this, update the array
+     * modules_limits according to your changes.
      */
     namespace ConfigKeys {
         enum class ConfigKeys {
@@ -148,6 +148,13 @@ namespace kraken {
                 "MaxLateralAcceleration", "MaxLinearAcceleration", "DefaultMaxSpeed", "MinimalSpeed", "MaxCurvature",
                 "StopDuration", "SearchTimeout", "ThreadNumber", "EnableDebug", "FastAndDirty", "CheckNewObstacles",
                 "AllowBackwardMotion", "NodeMemoryPoolSize", "ObstaclesMemoryPoolSize", "PrecisionTrace", "NbPoints"
+        };
+
+        const std::pair<ConfigKey, ConfigModule> modules_limits[4] = {
+            { ConfigKey::NecessaryMargin, ConfigModule::Navmesh },
+            { ConfigKey::MaxCurvatureDerivative, ConfigModule::Autoreplanning },
+            { ConfigKey::NodeMemoryPoolSize, ConfigModule::ResearchMechanical },
+            { ConfigKey::PrecisionTrace, ConfigModule::Memory }
         };
     };
 }
