@@ -46,8 +46,7 @@ namespace kraken
 
     void ConfigurationHandler::changeModuleSection(ConfigModule module_enum, std::string new_section)
     {
-        auto module_instance = getModule(module_enum);
-        if(module_instance)
+        if(auto module_instance = getModule(module_enum))
         {
             module_instance->changeSection(*this, std::move(new_section));
         }
