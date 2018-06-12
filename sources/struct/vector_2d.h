@@ -66,8 +66,8 @@ namespace kraken
 
         float distanceFast(const Vector2D &other) const noexcept;
         Vector2D &Ysym(bool do_symmetry) noexcept;
-        Vector2D rotate(const float angle, const Vector2D &rotation_center) const noexcept;
-        void rotate(float angle, const Vector2D &rotation_center) noexcept;
+        Vector2D rotate(const float &angle, const Vector2D &rotation_center) const noexcept;
+        void rotate(const float &angle, const Vector2D &rotation_center) noexcept;
         Vector2D &rotate(const float &angle) noexcept;
         Vector2D &rotate(const float &cos, const float &sin) noexcept;
         float getArgument() const;
