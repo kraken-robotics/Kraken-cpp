@@ -96,15 +96,7 @@ namespace kraken
 
     ConfigurationModule* ConfigurationHandler::getModule(ConfigModule module_enum)
     {
-        auto moduleId = static_cast<unsigned int>(module_enum);
-        if(moduleId < module_count)
-        {
-            return &modules_[moduleId];
-        }
-        else
-        {
-            return nullptr;
-        }
+        return &modules_[static_cast<int>(module_enum)];
     }
 
     void ConfigurationHandler::setDefaultValues()
