@@ -37,18 +37,14 @@ namespace kraken
 
     void ConfigurationHandler::registerCallback(ConfigModule module_enum, ConfigurationCallback callback)
     {
-        if(auto module_instance = getModule(module_enum))
-        {
-            module_instance->registerCallback(std::move(callback));
-        }
+        auto module_instance = getModule(module_enum)
+        module_instance->registerCallback(std::move(callback));
     }
 
     void ConfigurationHandler::changeModuleSection(ConfigModule module_enum, std::string new_section)
     {
-        if(auto module_instance = getModule(module_enum))
-        {
-            module_instance->changeSection(*this, std::move(new_section));
-        }
+        auto module_instance = getModule(module_enum)
+        module_instance->changeSection(*this, std::move(new_section));
     }
 
     void ConfigurationHandler::changeModuleSection(std::vector<ConfigModule>&& modules, std::string new_section)
