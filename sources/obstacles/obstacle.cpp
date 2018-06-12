@@ -10,4 +10,9 @@ namespace kraken
     {
         return rotation_center_ == rhs.rotation_center_;
     }
+
+    Vector2D Obstacle::getRotationCenter() const noexcept
+    {
+        return rotation_center_;
+    }
 }
