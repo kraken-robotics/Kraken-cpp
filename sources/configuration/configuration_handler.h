@@ -15,6 +15,7 @@ namespace kraken {
      * - The enumerations are ordered by module (see ConfigModule). If you have to modify this enum, keep the groups in the
      * same order and let the first key of each group at the first place. If you don't do this, update the array
      * modules_limits according to your changes.
+     * - The default_values_ array initializer list directly depends on the order of the enumerations values.
      */
     namespace ConfigKeys {
         enum class ConfigKeys {
@@ -120,26 +121,46 @@ namespace kraken {
 
         std::string getSectionName(ConfigModule module_key);
 
-        void setDefaultValues();
-
         std::string getKeyName(ConfigKey key);
 
         ConfigurationModule* getModule(ConfigModule module_enum);
-
-        //Helper function for default values initialization
-        template<typename T>
-        void doAddDefaultValue(ConfigKey key, T value) {
-            default_values_[(int) key] = ConfigurationParameter{value};
-        }
 
         template<class T>
         T getDefaultValue(ConfigKey key);
 
         INIReader ini_reader_;
         std::vector<ConfigurationModule> modules_;
-        std::vector<ConfigurationParameter> default_values_;
         static constexpr unsigned long configuration_key_count = (unsigned long) ConfigKey::NbPoints + 1;
         static constexpr unsigned long module_count = (unsigned long) ConfigModule::Tentacle + 1;
+
+        //This array need to be initialized in the same order as the ConfigKey enum
+        const ConfigurationParameter default_values_[configuration_key_count] = {
+                ConfigurationParameter{100},                        //NavmeshObstaclesDilatation
+                ConfigurationParameter{20000},                      //LargestTriangleAreaInNavmesh
+                ConfigurationParameter{200},                        //LongestEdgeInNavmesh
+                ConfigurationParameter{(std::string)"navmesh.krk"}, //NavmeshFilename
+                ConfigurationParameter{40},                         //NecessaryMargin
+                ConfigurationParameter{60},                         //PreferedMargin
+                ConfigurationParameter{100},                        //MarginBeforeCollision
+                ConfigurationParameter{100},                        //InitialMargin
+                ConfigurationParameter{5},                          //MaxCurvatureDerivative
+                ConfigurationParameter{3},                          //MaxLateralAcceleration
+                ConfigurationParameter{2},                          //MaxLinearAcceleration
+                ConfigurationParameter{1},                          //DefaultMaxSpeed
+                ConfigurationParameter{0},                          //MinimalSpeed
+                ConfigurationParameter{5},                          //MaxCurvature
+                ConfigurationParameter{800},                        //StopDuration
+                ConfigurationParameter{10000},                      //SearchTimeout
+                ConfigurationParameter{1},                          //ThreadNumber
+                ConfigurationParameter{true},                       //EnableDebug
+                ConfigurationParameter{false},                      //FastAndDirty
+                ConfigurationParameter{false},                      //CheckNewObstacles
+                ConfigurationParameter{20000},                      //NodeMemoryPoolSize
+                ConfigurationParameter{50000},                      //ObstaclesMemoryPoolSize
+                ConfigurationParameter{true},                       //AllowBackwardMotion
+                ConfigurationParameter{0.02f},                      //PrecisionTrace
+                ConfigurationParameter{5}                          //NbPoints
+        };
 
         //The array that keeps the string values of the ConfigKeys
         const std::string configuration_key_string_values[configuration_key_count] = {

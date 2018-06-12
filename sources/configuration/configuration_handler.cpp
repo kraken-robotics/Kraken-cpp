@@ -4,10 +4,8 @@ namespace kraken
 {
     ConfigurationHandler::ConfigurationHandler(const std::string& filename) :
         ini_reader_{filename},
-        modules_(module_count),
-        default_values_(configuration_key_count)
+        modules_(module_count)
     {
-        setDefaultValues();
     }
 
     template<>
@@ -77,34 +75,5 @@ namespace kraken
     ConfigurationModule* ConfigurationHandler::getModule(ConfigModule module_enum)
     {
         return &modules_[static_cast<int>(module_enum)];
-    }
-
-    void ConfigurationHandler::setDefaultValues()
-    {
-        doAddDefaultValue<int>(ConfigKey::NavmeshObstaclesDilatation, 100);
-        doAddDefaultValue<int>(ConfigKey::LargestTriangleAreaInNavmesh, 20000);
-        doAddDefaultValue<int>(ConfigKey::LongestEdgeInNavmesh, 200);
-        doAddDefaultValue<std::string>(ConfigKey::NavmeshFilename, "navmesh.krk");
-        doAddDefaultValue<int>(ConfigKey::NecessaryMargin, 40);
-        doAddDefaultValue<int>(ConfigKey::PreferedMargin, 60);
-        doAddDefaultValue<int>(ConfigKey::MarginBeforeCollision, 100);
-        doAddDefaultValue<int>(ConfigKey::InitialMargin, 100);
-        doAddDefaultValue<int>(ConfigKey::MaxCurvatureDerivative, 5);
-        doAddDefaultValue<int>(ConfigKey::MaxLateralAcceleration, 3);
-        doAddDefaultValue<int>(ConfigKey::MaxLinearAcceleration, 2);
-        doAddDefaultValue<int>(ConfigKey::DefaultMaxSpeed, 1);
-        doAddDefaultValue<int>(ConfigKey::MinimalSpeed, 0);
-        doAddDefaultValue<int>(ConfigKey::MaxCurvature, 5);
-        doAddDefaultValue<int>(ConfigKey::StopDuration, 800);
-        doAddDefaultValue<int>(ConfigKey::SearchTimeout, 10000);
-        doAddDefaultValue<int>(ConfigKey::ThreadNumber, 1);
-        doAddDefaultValue<bool>(ConfigKey::EnableDebug, true);
-        doAddDefaultValue<bool>(ConfigKey::FastAndDirty, false);
-        doAddDefaultValue<bool>(ConfigKey::CheckNewObstacles, false);
-        doAddDefaultValue<int>(ConfigKey::NodeMemoryPoolSize, 20000);
-        doAddDefaultValue<int>(ConfigKey::ObstaclesMemoryPoolSize, 50000);
-        doAddDefaultValue<bool>(ConfigKey::AllowBackwardMotion, true);
-        doAddDefaultValue<int>(ConfigKey::NbPoints, 5);
-        doAddDefaultValue<float>(ConfigKey::PrecisionTrace, 0.02f);
     }
 }
