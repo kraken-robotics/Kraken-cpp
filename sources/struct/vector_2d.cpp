@@ -38,7 +38,7 @@ namespace kraken
         return *this;
     }
 
-    Vector2D Vector2D::rotate(float angle, const Vector2D &rotation_center) const noexcept
+    Vector2D Vector2D::rotate(const float &angle, const Vector2D &rotation_center) const noexcept
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -47,7 +47,7 @@ namespace kraken
         return {x, y};
     }
 
-    void Vector2D::rotate(float angle, const Vector2D &rotation_center) noexcept
+    void Vector2D::rotate(const float &angle, const Vector2D &rotation_center) noexcept
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -56,7 +56,7 @@ namespace kraken
         x_ = tmp_x;
     }
 
-    Vector2D &Vector2D::rotate(float angle) noexcept
+    Vector2D &Vector2D::rotate(const float &angle) noexcept
     {
         float cos = std::cos(angle);
         float sin = std::sin(angle);
@@ -66,7 +66,7 @@ namespace kraken
         return *this;
     }
 
-    Vector2D &Vector2D::rotate(float cos, float sin) noexcept
+    Vector2D &Vector2D::rotate(const float &cos, const float &sin) noexcept
     {
         assert(std::abs(1 - cos * cos - sin * sin) < 0.01f);
         float old_x = x_;

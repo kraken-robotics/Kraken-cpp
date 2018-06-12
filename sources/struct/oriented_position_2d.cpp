@@ -30,16 +30,6 @@ namespace kraken
         return orientation_;
     }
 
-    float OrientedPosition2D::angle_difference(const float &angle_1, const float &angle_2)
-    {
-        float deltaO = std::fmod(angle_1 - angle_2, 2.f * static_cast<float >(M_PI));
-        if (deltaO > M_PI)
-            deltaO -= 2 * M_PI;
-        else if (deltaO < -M_PI)
-            deltaO += 2 * M_PI;
-        return deltaO;
-    }
-
 #if DEBUG
 
     std::ostream &operator<<(std::ostream &strm, const kraken::OrientedPosition2D &v)
