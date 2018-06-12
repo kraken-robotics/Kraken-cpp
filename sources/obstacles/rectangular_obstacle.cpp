@@ -1,27 +1,24 @@
 #include "rectangular_obstacle.h"
-#include <cmath>
 #include <vector>
+#include <array>
 #include <typeinfo>
 
 namespace kraken
 {
     RectangularObstacle::RectangularObstacle(const int &size_x, const int &size_y, const Vector2D &position,
-                                             const float &angle) :
+                                             const float &angle) noexcept :
             RectangularObstacle(size_x / 2, size_x / 2, size_y / 2, size_y / 2, position, angle)
-    {
-
-    }
+    {}
 
     RectangularObstacle::RectangularObstacle(const int &size_left_x, const int &size_right_x, const int &size_up_y,
-                                             const int &size_down_y, const Vector2D &position, const float &angle) :
+                                             const int &size_down_y, const Vector2D &position,
+                                             const float &angle) noexcept :
             RectangularObstacle(Vector2D(size_right_x, size_up_y), Vector2D(-size_left_x, -size_down_y), position,
                                 angle)
-    {
-
-    }
+    {}
 
     RectangularObstacle::RectangularObstacle(const Vector2D &top_right_corner, const Vector2D &bottom_left_corner,
-                                             const Vector2D &position, const float &angle) :
+                                             const Vector2D &position, const float &angle) noexcept :
             Obstacle(position), angle_(angle), cos_(std::cos(angle)), sin_(std::sin(angle)),
             left_bottom_corner_(bottom_left_corner),
             left_upper_corner_(bottom_left_corner.getX(), top_right_corner.getY()),
@@ -33,16 +30,14 @@ namespace kraken
             right_upper_corner_rotate_(toTableCoordinateSystem(right_upper_corner_)),
             geometric_center_((right_bottom_corner_rotate_ + left_upper_corner_rotate_) * 0.5f),
             half_diagonal_(top_right_corner.distance(bottom_left_corner) / 2.f)
-    {
+    {}
 
-    }
-
-    void RectangularObstacle::update(const Vector2D &position, const float &orientation)
+    void RectangularObstacle::update(const Vector2D &position, const float &orientation) noexcept
     {
         update(position.getX(), position.getY(), orientation);
     }
 
-    void RectangularObstacle::update(const float &x, const float &y, const float &orientation)
+    void RectangularObstacle::update(const float &x, const float &y, const float &orientation) noexcept
     {
         rotation_center_.setX(x);
         rotation_center_.setY(y);
@@ -57,91 +52,71 @@ namespace kraken
         geometric_center_ = (right_bottom_corner_rotate_ + left_upper_corner_rotate_) * 0.5f;
     }
 
-    Vector2D RectangularObstacle::toObstacleCoordinateSystem(const Vector2D &point) const
-    {
-        return Vector2D(getXToObstacleCoordinateSystem(point), getYToObstacleCoordinateSystem(point));
-    }
-
-    Vector2D RectangularObstacle::toTableCoordinateSystem(const Vector2D &point) const
-    {
-        return Vector2D(cos_ * point.getX() - sin_ * point.getY() + rotation_center_.getX(),
-                        sin_ * point.getX() + cos_ * point.getY() + rotation_center_.getY());
-    }
-
-    float RectangularObstacle::getXToObstacleCoordinateSystem(const Vector2D &point) const
-    {
-        return cos_ * (point.getX() - rotation_center_.getX()) + sin_ * (point.getY() - rotation_center_.getY());
-    }
-
-    float RectangularObstacle::getYToObstacleCoordinateSystem(const Vector2D &point) const
-    {
-        return -sin_ * (point.getX() - rotation_center_.getX()) + cos_ * (point.getY() - rotation_center_.getY());
-    }
-
     void RectangularObstacle::getExpandedConvexHull(const float &expansion, const float &longestAllowedLength,
                                                     std::vector<Vector2D> &vector_2d_list) const
     {
-        float coeff = expansion / half_diagonal_;
-        Vector2D corners[] = {(right_bottom_corner_rotate_ - geometric_center_) * coeff + right_bottom_corner_rotate_,
-                              (right_upper_corner_rotate_ - geometric_center_) * coeff + right_upper_corner_rotate_,
-                              (left_upper_corner_rotate_ - geometric_center_) * coeff + left_upper_corner_rotate_,
-                              (left_bottom_corner_rotate_ - geometric_center_) * coeff + left_bottom_corner_rotate_};
+        const auto coeff = expansion / half_diagonal_;
+        std::array<const Vector2D, 4> corners = {
+                (right_bottom_corner_rotate_ - geometric_center_) * coeff + right_bottom_corner_rotate_,
+                (right_upper_corner_rotate_ - geometric_center_) * coeff + right_upper_corner_rotate_,
+                (left_upper_corner_rotate_ - geometric_center_) * coeff + left_upper_corner_rotate_,
+                (left_bottom_corner_rotate_ - geometric_center_) * coeff + left_bottom_corner_rotate_};
 
-        for (auto const &point : corners)
+        for (const auto &point : corners)
             vector_2d_list.push_back(point);
 
-        for (int i = 0; i < 4; i++)
+        for (auto i = 0; i < 4; i++)
         {
-            Vector2D pointA = corners[i];
-            Vector2D pointB = corners[(i + 1) % 4];
-            float distance = pointA.distance(pointB);
-            int nbPoints = static_cast<int>(std::ceil(distance / longestAllowedLength));
-            float delta = distance / nbPoints;
-            for (int j = 1; j < nbPoints; j++)
+            const auto pointA = corners[i];
+            const auto pointB = corners[(i + 1) % 4];
+            auto distance = pointA.distance(pointB);
+            auto nbPoints = static_cast<int>(std::ceil(distance / longestAllowedLength));
+            auto delta = distance / nbPoints;
+            for (auto j = 1; j < nbPoints; j++)
                 vector_2d_list.push_back((pointB - pointA) * ((j * delta) / distance) + pointA);
         }
     }
 
-    float RectangularObstacle::squaredDistance(const Vector2D &v) const
+    float RectangularObstacle::squaredDistance(const Vector2D &v) const noexcept
     {
-        Vector2D in = toObstacleCoordinateSystem(v);
+        auto position = toObstacleCoordinateSystem(v);
 
-        if (in.getX() < left_bottom_corner_.getX() && in.getY() < left_bottom_corner_.getY())
-            return in.squaredDistance(left_bottom_corner_);
+        if (position.getX() < left_bottom_corner_.getX() && position.getY() < left_bottom_corner_.getY())
+            return position.squaredDistance(left_bottom_corner_);
 
-        if (in.getX() < left_upper_corner_.getX() && in.getY() > left_upper_corner_.getY())
-            return in.squaredDistance(left_upper_corner_);
+        if (position.getX() < left_upper_corner_.getX() && position.getY() > left_upper_corner_.getY())
+            return position.squaredDistance(left_upper_corner_);
 
-        if (in.getX() > right_bottom_corner_.getX() && in.getY() < right_bottom_corner_.getY())
-            return in.squaredDistance(right_bottom_corner_);
+        if (position.getX() > right_bottom_corner_.getX() && position.getY() < right_bottom_corner_.getY())
+            return position.squaredDistance(right_bottom_corner_);
 
-        if (in.getX() > right_upper_corner_.getX() && in.getY() > right_upper_corner_.getY())
-            return in.squaredDistance(right_upper_corner_);
+        if (position.getX() > right_upper_corner_.getX() && position.getY() > right_upper_corner_.getY())
+            return position.squaredDistance(right_upper_corner_);
 
-        if (in.getX() > right_upper_corner_.getX())
-            return (in.getX() - right_upper_corner_.getX()) * (in.getX() - right_upper_corner_.getX());
+        if (position.getX() > right_upper_corner_.getX())
+            return (position.getX() - right_upper_corner_.getX()) * (position.getX() - right_upper_corner_.getX());
 
-        if (in.getX() < left_bottom_corner_.getX())
-            return (in.getX() - left_bottom_corner_.getX()) * (in.getX() - left_bottom_corner_.getX());
+        if (position.getX() < left_bottom_corner_.getX())
+            return (position.getX() - left_bottom_corner_.getX()) * (position.getX() - left_bottom_corner_.getX());
 
-        if (in.getY() > right_upper_corner_.getY())
-            return (in.getY() - right_upper_corner_.getY()) * (in.getY() - right_upper_corner_.getY());
+        if (position.getY() > right_upper_corner_.getY())
+            return (position.getY() - right_upper_corner_.getY()) * (position.getY() - right_upper_corner_.getY());
 
-        if (in.getY() < left_bottom_corner_.getY())
-            return (in.getY() - left_bottom_corner_.getY()) * (in.getY() - left_bottom_corner_.getY());
+        if (position.getY() < left_bottom_corner_.getY())
+            return (position.getY() - left_bottom_corner_.getY()) * (position.getY() - left_bottom_corner_.getY());
 
-        // else, v is in the obstacle
+        // else, v is position the obstacle
         return 0;
     }
 
-    bool RectangularObstacle::isInObstacle(const Vector2D &pos) const
+    bool RectangularObstacle::isInObstacle(const Vector2D &pos) const noexcept
     {
-        Vector2D in = toObstacleCoordinateSystem(pos);
-        return in.getX() >= left_bottom_corner_.getX() && in.getX() <= right_upper_corner_.getX() &&
-               in.getY() >= left_bottom_corner_.getY() && in.getY() <= right_upper_corner_.getY();
+        const auto position = toObstacleCoordinateSystem(pos);
+        return position.getX() >= left_bottom_corner_.getX() && position.getX() <= right_upper_corner_.getX() &&
+               position.getY() >= left_bottom_corner_.getY() && position.getY() <= right_upper_corner_.getY();
     }
 
-    bool RectangularObstacle::isColliding(const Vector2D &point_a, const Vector2D &point_b) const
+    bool RectangularObstacle::isColliding(const Vector2D &point_a, const Vector2D &point_b) const noexcept
     {
         if (Vector2D::segmentIntersection(point_a, point_b, left_bottom_corner_rotate_, left_upper_corner_rotate_)
             || Vector2D::segmentIntersection(point_a, point_b, left_upper_corner_rotate_, right_upper_corner_rotate_)
@@ -152,7 +127,7 @@ namespace kraken
         return isInObstacle(point_a) || isInObstacle(point_b);
     }
 
-    bool RectangularObstacle::isColliding(const RectangularObstacle &obs) const
+    bool RectangularObstacle::isColliding(const RectangularObstacle &obs) const noexcept
     {
         if (rotation_center_.squaredDistance(obs.rotation_center_) >=
             (half_diagonal_ + obs.half_diagonal_) * (half_diagonal_ + obs.half_diagonal_))
@@ -180,12 +155,7 @@ namespace kraken
                                    obs.getYToObstacleCoordinateSystem(right_upper_corner_rotate_));
     }
 
-    float RectangularObstacle::getHalfDiagonal() const
-    {
-        return half_diagonal_;
-    }
-
-    bool RectangularObstacle::operator==(const Obstacle &rhs) const
+    bool RectangularObstacle::operator==(const Obstacle &rhs) const noexcept
     {
         if (!Obstacle::operator==(rhs))
             return false;
@@ -193,19 +163,19 @@ namespace kraken
         if (typeid(*this) != typeid(rhs))
             return false;
 
-        RectangularObstacle ro_rhs = static_cast<const RectangularObstacle &>(rhs);
+        const auto ro_rhs = static_cast<const RectangularObstacle &>(rhs);
         return angle_ == ro_rhs.angle_ && left_bottom_corner_ == ro_rhs.left_bottom_corner_ &&
                right_upper_corner_ == ro_rhs.right_upper_corner_;
     }
 
     bool RectangularObstacle::test_separation(const float &a, const float &b, const float &a2, const float &b2,
-                                              const float &c2, const float &d2) const
+                                              const float &c2, const float &d2) const noexcept
     {
-        float min1 = std::min(a, b);
-        float max1 = std::max(a, b);
+        auto min1 = std::min(a, b);
+        auto max1 = std::max(a, b);
 
-        float min2 = std::min(std::min(a2, b2), std::min(c2, d2));
-        float max2 = std::max(std::max(a2, b2), std::max(c2, d2));
+        auto min2 = std::min(std::min(a2, b2), std::min(c2, d2));
+        auto max2 = std::max(std::max(a2, b2), std::max(c2, d2));
 
         return min1 > max2 || min2 > max1;
     }
