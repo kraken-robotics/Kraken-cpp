@@ -7,12 +7,11 @@
 
 namespace kraken
 {
-    CircularObstacle::CircularObstacle(const Vector2D &pos, float radius) :
+    CircularObstacle::CircularObstacle(const Vector2D &pos, float radius) noexcept :
             Obstacle(pos), radius_(radius), squared_radius_(radius * radius)
-    {
-    }
+    {}
 
-    bool CircularObstacle::isInObstacle(const Vector2D &pos) const
+    bool CircularObstacle::isInObstacle(const Vector2D &pos) const noexcept
     {
         return pos.squaredDistance(rotation_center_) <= squared_radius_;
     }
@@ -24,14 +23,14 @@ namespace kraken
         return out * out;
     }
 
-    bool CircularObstacle::isColliding(const Vector2D &point_a, const Vector2D &point_b) const
+    bool CircularObstacle::isColliding(const Vector2D &point_a, const Vector2D &point_b) const noexcept
     {
-        const Vector2D point_c = rotation_center_;
-        const Vector2D ab = point_b - point_a;
-        const Vector2D ac = point_c - point_a;
-        float numerator = std::abs(ab.getX() * ac.getY() - ab.getY() * ac.getX());
-        float denominator = ab.squaredNorm();
-        float distance = numerator * numerator / denominator;
+        const auto point_c = rotation_center_;
+        const auto ab = point_b - point_a;
+        const auto ac = point_c - point_a;
+        auto numerator = std::abs(ab.getX() * ac.getY() - ab.getY() * ac.getX());
+        auto denominator = ab.squaredNorm();
+        auto distance = numerator * numerator / denominator;
 
         // no collision with the line (AB)
         if (distance > squared_radius_)
@@ -48,29 +47,25 @@ namespace kraken
     }
 
     void CircularObstacle::getExpandedConvexHull(const float &expansion, const float &longestAllowedLength,
-                                                 std::vector<Vector2D> &vector_2d_list) const
+                                                 std::vector<Vector2D> &vector_2d_list) const noexcept
     {
-        int nbPoints = std::ceil(M_2_PI * (radius_ + expansion) / longestAllowedLength);
+        auto nbPoints = static_cast<int>(std::ceil(M_2_PI * (radius_ + expansion) / longestAllowedLength));
         if (nbPoints < 3)
             nbPoints = 3;
 
         for (int i = 0; i < nbPoints; ++i)
             vector_2d_list.push_back(
-                    Vector2D::fromPolar(expansion + radius_, i * M_2_PI / nbPoints) + rotation_center_);
+                    Vector2D::fromPolar(expansion + radius_, i * static_cast<float>(M_2_PI) / nbPoints) +
+                    rotation_center_);
     }
 
-    bool CircularObstacle::operator==(const Obstacle &rhs) const
+    bool CircularObstacle::operator==(const Obstacle &rhs) const noexcept
     {
-        if (!Obstacle::operator==(rhs))
-            return false;
-
-        if (typeid(*this) != typeid(rhs))
-            return false;
-
-        return radius_ == static_cast<const CircularObstacle &>(rhs).radius_;
+        return Obstacle::operator==(rhs) && typeid(*this) == typeid(rhs) &&
+               radius_ == static_cast<const CircularObstacle &>(rhs).radius_;
     }
 
-    bool CircularObstacle::isColliding(const RectangularObstacle &obs) const
+    bool CircularObstacle::isColliding(const RectangularObstacle &obs) const noexcept
     {
         if (rotation_center_.squaredDistance(obs.getRotationCenter()) >=
             (radius_ + obs.getHalfDiagonal()) * (radius_ + obs.getHalfDiagonal()))
