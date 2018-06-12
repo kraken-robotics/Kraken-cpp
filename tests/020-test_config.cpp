@@ -1,5 +1,4 @@
 #include "catch/catch.hpp"
-#include <iostream>
 #include "../sources/configuration/configuration_handler.h"
 
 TEST_CASE("Configuration", "[Configuration]")

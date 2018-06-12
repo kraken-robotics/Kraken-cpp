@@ -7,7 +7,6 @@
 #include "ini.h"
 #include "INIReader.h"
 
-
 #if DEBUG
 #include <iostream>
 #endif
@@ -67,11 +66,17 @@ bool INIReader::GetBoolean(const std::string& section, const std::string& name, 
     // Convert to lower case to make std::string comparisons case-insensitive
     std::transform(valstr.begin(), valstr.end(), valstr.begin(), ::tolower);
     if (valstr == "true" || valstr == "yes" || valstr == "on" || valstr == "1")
+    {
         return true;
+    }
     else if (valstr == "false" || valstr == "no" || valstr == "off" || valstr == "0")
+    {
         return false;
+    }
     else
+    {
         return default_value;
+    }
 }
 
 std::set<std::string> INIReader::GetSections() const
@@ -104,7 +109,7 @@ int INIReader::ValueHandler(void* user, const char* section, const char* name,
 
     // Add the value to the lookup map
     std::string key = MakeKey(section, name);
-    if (reader->_values[key].empty())
+    if (!reader->_values[key].empty())
         reader->_values[key] += "\n";
     reader->_values[key] += value;
 
