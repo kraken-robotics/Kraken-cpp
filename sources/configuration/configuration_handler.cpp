@@ -10,53 +10,30 @@ namespace kraken
         setDefaultValues();
     }
 
-    long ConfigurationHandler::getInt(ConfigKey key, ConfigModule module_enum)
-    {
-        auto defaultValue = static_cast<int>(default_values_[static_cast<int>(key)].numeric_value);
-        auto sectionName = getSectionName(module_enum);
-        return ini_reader_.GetInteger(sectionName, getKeyName(key), defaultValue);
-    }
+    template<>
+    long ConfigurationHandler::getDefaultValue<long>(ConfigKey key) {
+        return static_cast<long>(default_values_[static_cast<int>(key)].numeric_value);
+    };
 
-    double ConfigurationHandler::getDouble(ConfigKey key, ConfigModule module_enum)
-    {
-        auto defaultValue = default_values_[static_cast<int>(key)].numeric_value;
-        auto sectionName = getSectionName(module_enum);
-        return ini_reader_.GetReal(sectionName, getKeyName(key), defaultValue);
-    }
+    template<>
+    int ConfigurationHandler::getDefaultValue<int>(ConfigKey key) {
+        return static_cast<int>(getDefaultValue<long>(key));
+    };
 
-    bool ConfigurationHandler::getBool(ConfigKey key, ConfigModule module_enum)
-    {
-        auto defaultValue = default_values_[static_cast<int>(key)].boolean_value;
-        auto sectionName = getSectionName(module_enum);
-        return ini_reader_.GetBoolean(sectionName, getKeyName(key), defaultValue);
-    }
+    template<>
+    double ConfigurationHandler::getDefaultValue<double>(ConfigKey key) {
+        return default_values_[static_cast<int>(key)].numeric_value;
+    };
 
-    std::string ConfigurationHandler::getString(ConfigKey key, ConfigModule module_enum)
-    {
-        auto defaultValue = default_values_[static_cast<int>(key)].string_value;
-        auto sectionName = getSectionName(module_enum);
-        return ini_reader_.Get(sectionName, getKeyName(key), defaultValue);
-    }
+    template<>
+    bool ConfigurationHandler::getDefaultValue<bool>(ConfigKey key) {
+        return default_values_[static_cast<int>(key)].boolean_value;
+    };
 
-    long ConfigurationHandler::getInt(ConfigKey key)
-    {
-        return getInt(key, getModuleEnumFromKeyEnum(key));
-    }
-
-    double ConfigurationHandler::getDouble(ConfigKey key)
-    {
-        return getDouble(key, getModuleEnumFromKeyEnum(key));
-    }
-
-    bool ConfigurationHandler::getBool(ConfigKey key)
-    {
-        return getBool(key, getModuleEnumFromKeyEnum(key));
-    }
-
-    std::string ConfigurationHandler::getString(ConfigKey key)
-    {
-        return getString(key, getModuleEnumFromKeyEnum(key));
-    }
+    template<>
+    std::string ConfigurationHandler::getDefaultValue<std::string>(ConfigKey key) {
+        return default_values_[static_cast<int>(key)].string_value;
+    };
 
     void ConfigurationHandler::registerCallback(ConfigModule module_enum, ConfigurationCallback callback)
     {

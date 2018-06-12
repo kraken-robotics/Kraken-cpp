@@ -45,6 +45,9 @@ public:
     // and valid false values are "false", "no", "off", "0" (not case sensitive).
     bool GetBoolean(std::string section, std::string name, bool default_value);
 
+    template<class T>
+    T get(std::string sectionName, std::string name, T default_value);
+
     // Returns all the section names from the INI file, in alphabetical order, but in the
     // original casing
     std::set<std::string> GetSections() const;

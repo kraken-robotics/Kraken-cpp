@@ -19,19 +19,19 @@ namespace kraken {
     namespace ConfigKeys {
         enum class ConfigKeys {
             //Navmesh parameters
-                    NavmeshObstaclesDilatation = 0,
+            NavmeshObstaclesDilatation = 0,
             LargestTriangleAreaInNavmesh,
             LongestEdgeInNavmesh,
             NavmeshFilename,
 
             //Auto replanning
-                    NecessaryMargin,
+            NecessaryMargin,
             PreferedMargin,
             MarginBeforeCollision,
             InitialMargin,
 
             //Research and mechanical parameters
-                    MaxCurvatureDerivative,
+            MaxCurvatureDerivative,
             MaxLateralAcceleration,
             MaxLinearAcceleration,
             DefaultMaxSpeed,
@@ -46,11 +46,11 @@ namespace kraken {
             AllowBackwardMotion,
 
             //Memory management parameters
-                    NodeMemoryPoolSize,
+            NodeMemoryPoolSize,
             ObstaclesMemoryPoolSize,
 
             //Tentacle parameters
-                    PrecisionTrace,
+            PrecisionTrace,
             NbPoints
         };
     }
@@ -101,21 +101,19 @@ namespace kraken {
 
         void changeModuleSection(std::vector<ConfigModule> &&modules, std::string new_section);
 
-        long getInt(ConfigKey key, ConfigModule module_enum);
+        template<typename T>
+        T get(ConfigKey key, ConfigModule module_enum)
+        {
+            auto defaultValue = getDefaultValue<T>(key);
+            auto sectionName = getSectionName(module_enum);
+            return ini_reader_.get<T>(sectionName, getKeyName(key), defaultValue);
+        }
 
-        double getDouble(ConfigKey key, ConfigModule module_enum);
-
-        bool getBool(ConfigKey key, ConfigModule module_enum);
-
-        std::string getString(ConfigKey key, ConfigModule module_enum);
-
-        long getInt(ConfigKey key);
-
-        double getDouble(ConfigKey key);
-
-        bool getBool(ConfigKey key);
-
-        std::string getString(ConfigKey key);
+        template<typename T>
+        T get(ConfigKey key)
+        {
+            return get<T>(key, getModuleEnumFromKeyEnum(key));
+        }
 
     private:
         ConfigModule getModuleEnumFromKeyEnum(ConfigKey key) const noexcept;
@@ -133,6 +131,9 @@ namespace kraken {
         void doAddDefaultValue(ConfigKey key, T value) {
             default_values_[(int) key] = ConfigurationParameter{value};
         }
+
+        template<class T>
+        T getDefaultValue(ConfigKey key);
 
         INIReader ini_reader_;
         std::vector<ConfigurationModule> modules_;

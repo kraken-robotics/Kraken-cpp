@@ -134,3 +134,33 @@ int INIReader::ValueHandler(void* user, const char* section, const char* name,
 
     return 1;
 }
+
+template<>
+long INIReader::get<long>(std::string sectionName, std::string name, long default_value)
+{
+    return GetInteger(sectionName, name, default_value);
+}
+
+template<>
+int INIReader::get<int>(std::string sectionName, std::string name, int default_value)
+{
+    return static_cast<int>(get<long>(sectionName, name, default_value));
+}
+
+template<>
+double INIReader::get<double>(std::string sectionName, std::string name, double default_value)
+{
+    return GetReal(sectionName, name, default_value);
+}
+
+template<>
+bool INIReader::get<bool>(std::string sectionName, std::string name, bool default_value)
+{
+    return GetBoolean(sectionName, name, default_value);
+}
+
+template<>
+std::string INIReader::get<std::string>(std::string sectionName, std::string name, std::string default_value)
+{
+    return Get(sectionName, name, default_value);
+}

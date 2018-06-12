@@ -10,16 +10,16 @@ TEST_CASE("Configuration", "[Configuration]")
     ConfigurationHandler handler{"../tests/test.ini"};
 
     //Test default section load
-    REQUIRE (handler.getInt(ConfigKey::LongestEdgeInNavmesh) == 9);
-    REQUIRE (handler.getInt(ConfigKey::LongestEdgeInNavmesh, ConfigModule::Navmesh) == 9);
-    REQUIRE (handler.getBool(ConfigKey::EnableDebug));
-    REQUIRE (handler.getBool(ConfigKey::EnableDebug, ConfigModule::ResearchMechanical));
+    REQUIRE (handler.get<int>(ConfigKey::LongestEdgeInNavmesh) == 9);
+    REQUIRE (handler.get<int>(ConfigKey::LongestEdgeInNavmesh, ConfigModule::Navmesh) == 9);
+    REQUIRE (handler.get<bool>(ConfigKey::EnableDebug));
+    REQUIRE (handler.get<bool>(ConfigKey::EnableDebug, ConfigModule::ResearchMechanical));
 
     //Test hard coded default values
-    REQUIRE(handler.getInt(ConfigKey::NavmeshObstaclesDilatation) == 100);
-    REQUIRE(handler.getString(ConfigKey::NavmeshFilename) == "navmesh.krk");
-    REQUIRE(handler.getString(ConfigKey::NavmeshFilename, ConfigModule::Navmesh) == "navmesh.krk");
-    REQUIRE(handler.getDouble(ConfigKey::PrecisionTrace) == 0.02f);
+    REQUIRE(handler.get<int>(ConfigKey::NavmeshObstaclesDilatation) == 100);
+    REQUIRE(handler.get<std::string>(ConfigKey::NavmeshFilename) == "navmesh.krk");
+    REQUIRE(handler.get<std::string>(ConfigKey::NavmeshFilename, ConfigModule::Navmesh) == "navmesh.krk");
+    REQUIRE(handler.get<double>(ConfigKey::PrecisionTrace) == 0.02f);
 
     //Register a function to be called when the configuration changes for Navmesh module
     handler.registerCallback(ConfigModule::Navmesh, [] (ConfigurationHandler& ch) {
@@ -27,15 +27,15 @@ TEST_CASE("Configuration", "[Configuration]")
         if(passCount == 0)
         {
             //Test section change on module Navmesh
-            REQUIRE (ch.getInt(ConfigKey::LongestEdgeInNavmesh) == 1);
-            REQUIRE (ch.getBool(ConfigKey::EnableDebug));
+            REQUIRE (ch.get<int>(ConfigKey::LongestEdgeInNavmesh) == 1);
+            REQUIRE (ch.get<bool>(ConfigKey::EnableDebug));
         }
         else if(passCount == 1)
         {
             //Test section change on both modules.
             //Navmesh is first in the changeSection call, so EnableDebug is false.
-            REQUIRE (ch.getInt(ConfigKey::LongestEdgeInNavmesh) == 2);
-            REQUIRE (!ch.getBool(ConfigKey::EnableDebug));
+            REQUIRE (ch.get<int>(ConfigKey::LongestEdgeInNavmesh) == 2);
+            REQUIRE (!ch.get<bool>(ConfigKey::EnableDebug));
         }
         passCount++;
     });
@@ -46,15 +46,15 @@ TEST_CASE("Configuration", "[Configuration]")
         if(passCount == 0)
         {
             //Test section change on module ResearchMechanical
-            REQUIRE (ch.getInt(ConfigKey::LongestEdgeInNavmesh) == 1);
-            REQUIRE (!ch.getBool(ConfigKey::EnableDebug));
+            REQUIRE (ch.get<int>(ConfigKey::LongestEdgeInNavmesh) == 1);
+            REQUIRE (!ch.get<bool>(ConfigKey::EnableDebug));
         }
         else if(passCount == 1)
         {
             //Test section change on both modules.
             //Navmesh is first in the changeSection call, so LongestEdgeInNavmesh == 2.
-            REQUIRE (ch.getInt(ConfigKey::LongestEdgeInNavmesh) == 2);
-            REQUIRE (ch.getBool(ConfigKey::EnableDebug));
+            REQUIRE (ch.get<int>(ConfigKey::LongestEdgeInNavmesh) == 2);
+            REQUIRE (ch.get<bool>(ConfigKey::EnableDebug));
         }
         passCount++;
     });
