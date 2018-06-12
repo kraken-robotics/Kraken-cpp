@@ -155,6 +155,11 @@ namespace kraken
                                    obs.getYToObstacleCoordinateSystem(right_upper_corner_rotate_));
     }
 
+    float RectangularObstacle::getHalfDiagonal() const noexcept
+    {
+        return half_diagonal_;
+    }
+
     bool RectangularObstacle::operator==(const Obstacle &rhs) const noexcept
     {
         if (!Obstacle::operator==(rhs))
@@ -166,6 +171,27 @@ namespace kraken
         const auto ro_rhs = static_cast<const RectangularObstacle &>(rhs);
         return angle_ == ro_rhs.angle_ && left_bottom_corner_ == ro_rhs.left_bottom_corner_ &&
                right_upper_corner_ == ro_rhs.right_upper_corner_;
+    }
+
+    Vector2D RectangularObstacle::toObstacleCoordinateSystem(const Vector2D &point) const noexcept
+    {
+        return {getXToObstacleCoordinateSystem(point), getYToObstacleCoordinateSystem(point)};
+    }
+
+    Vector2D RectangularObstacle::toTableCoordinateSystem(const Vector2D &point) const noexcept
+    {
+        return {cos_ * point.getX() - sin_ * point.getY() + rotation_center_.getX(),
+                sin_ * point.getX() + cos_ * point.getY() + rotation_center_.getY()};
+    }
+
+    float RectangularObstacle::getXToObstacleCoordinateSystem(const Vector2D &point) const noexcept
+    {
+        return cos_ * (point.getX() - rotation_center_.getX()) + sin_ * (point.getY() - rotation_center_.getY());
+    }
+
+    float RectangularObstacle::getYToObstacleCoordinateSystem(const Vector2D &point) const noexcept
+    {
+        return -sin_ * (point.getX() - rotation_center_.getX()) + cos_ * (point.getY() - rotation_center_.getY());
     }
 
     bool RectangularObstacle::test_separation(const float &a, const float &b, const float &a2, const float &b2,

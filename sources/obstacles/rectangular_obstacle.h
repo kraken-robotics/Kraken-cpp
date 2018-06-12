@@ -29,34 +29,15 @@ namespace kraken
         bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const noexcept override;
         bool isColliding(const RectangularObstacle &obs) const noexcept override;
 
-        constexpr float getHalfDiagonal() const noexcept
-        {
-            return half_diagonal_;
-        }
+        float getHalfDiagonal() const noexcept;
 
         bool operator==(const Obstacle &rhs) const noexcept override;
 
     protected:
-        constexpr Vector2D toObstacleCoordinateSystem(const Vector2D &point) const noexcept
-        {
-            return {getXToObstacleCoordinateSystem(point), getYToObstacleCoordinateSystem(point)};
-        }
-
-        constexpr Vector2D toTableCoordinateSystem(const Vector2D &point) const noexcept
-        {
-            return {cos_ * point.getX() - sin_ * point.getY() + rotation_center_.getX(),
-                    sin_ * point.getX() + cos_ * point.getY() + rotation_center_.getY()};
-        }
-
-        constexpr float getXToObstacleCoordinateSystem(const Vector2D &point) const
-        {
-            return cos_ * (point.getX() - rotation_center_.getX()) + sin_ * (point.getY() - rotation_center_.getY());
-        }
-
-        constexpr float getYToObstacleCoordinateSystem(const Vector2D &point) const
-        {
-            return -sin_ * (point.getX() - rotation_center_.getX()) + cos_ * (point.getY() - rotation_center_.getY());
-        }
+        Vector2D toObstacleCoordinateSystem(const Vector2D &point) const noexcept;
+        Vector2D toTableCoordinateSystem(const Vector2D &point) const noexcept;
+        float getXToObstacleCoordinateSystem(const Vector2D &point) const noexcept;
+        float getYToObstacleCoordinateSystem(const Vector2D &point) const noexcept;
 
     private:
         bool test_separation(const float &a, const float &b, const float &a2, const float &b2, const float &c2,
