@@ -37,8 +37,7 @@ namespace kraken
 
     void ConfigurationHandler::registerCallback(ConfigModule module_enum, ConfigurationCallback callback)
     {
-        auto module_instance = getModule(module_enum);
-        if(module_instance)
+        if(auto module_instance = getModule(module_enum))
         {
             module_instance->registerCallback(std::move(callback));
         }
