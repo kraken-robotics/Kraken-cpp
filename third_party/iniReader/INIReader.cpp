@@ -4,7 +4,6 @@
 #include <cctype>
 #include <cstdlib>
 
-#include "ini.h"
 #include "INIReader.h"
 
 #if DEBUG
@@ -12,20 +11,11 @@
 
 #endif
 
+#include <fstream>
+
 INIReader::INIReader(std::string filename)
 {
-    _error = ini_parse(filename.c_str(), valueHandler, this);
-#if DEBUG
-    if(_error == -1)
-    {
-        std::cerr << "An error happened while loading the ini file." << std::endl;
-    }
-#endif
-}
-
-int INIReader::ParseError() const noexcept
-{
-    return _error;
+    parseFile(filename);
 }
 
 void INIReader::safeToLower(std::string& stringRef) noexcept
@@ -40,10 +30,61 @@ void INIReader::safeToLower(std::string& stringRef) noexcept
     }
 }
 
+void INIReader::parseFile(const std::string& filename)
+{
+    std::ifstream infile(filename);
+    std::string currentSection;
+
+    for( std::string line; getline( infile, line ); )
+    {
+        //Empty line, skip it
+        if(line.length() == 0)
+        {
+            continue;
+        }
+
+        auto firstChar = line[0];
+        if(firstChar== ';' || firstChar == '#')
+        {
+            //skip comment line
+            continue;
+        }
+        else if(firstChar == '[')
+        {
+            //change section
+            auto endPosition = line.find(']') - 1;
+            if(endPosition == std::string::npos)
+            {
+                throw (std::invalid_argument("Malformed INI. Couldn't find end section delimiter ']' at line " + line));
+            }
+            currentSection = line.substr(1, endPosition);
+        }
+        else
+        {
+            //register new key:value pair
+            auto separatorPosition = line.find(':');
+            if(separatorPosition == std::string::npos)
+            {
+                separatorPosition = line.find('=');
+                if(separatorPosition == std::string::npos)
+                {
+                    throw (std::invalid_argument("Malformed INI. Incorrect separator in key:value pair at line " + line));
+                }
+            }
+
+            auto key = makeKey(currentSection, line.substr(0, separatorPosition));
+            auto value = line.substr(separatorPosition + 1, line.length());
+            values_.emplace(key, value);
+        }
+    }
+
+
+}
+
 std::string INIReader::getString(const std::string &section, const std::string &name, std::string default_value) const noexcept
 {
-    std::string key = makeKey(section, name);
-    return _values.count(key) ? _values.at(key) : default_value;
+    auto key = makeKey(section, name);
+    return values_.count(key) ? values_.at(key) : default_value;
 }
 
 int INIReader::getInteger(const std::string &section, const std::string &name, int default_value) const noexcept
@@ -99,37 +140,6 @@ std::string INIReader::makeKey(const std::string &section, const std::string &na
     // Convert to lower case to make section/name lookups case-insensitive
     safeToLower(key);
     return key;
-}
-
-int INIReader::valueHandler(void *user, const char *section, const char *name,
-                            const char *value)
-{
-    auto reader = (INIReader*)user;
-
-    // Add the value to the lookup map
-    std::string key = makeKey(section, name);
-    if (!reader->_values[key].empty())
-        reader->_values[key] += "\n";
-    reader->_values[key] += value;
-
-    // Insert the section in the sections set
-    reader->_sections.insert(section);
-
-    // Add the value to the values set
-    std::string sectionKey = section;
-    std::transform(sectionKey.begin(), sectionKey.end(), sectionKey.begin(), ::tolower);
-
-    auto fieldSetIt = reader->_fields.find(sectionKey);
-    if(fieldSetIt==reader->_fields.end())
-    {
-        auto fieldsSet = std::unique_ptr<std::set<std::string>>(new std::set<std::string>);
-        fieldsSet->insert(name);
-        reader->_fields.insert ( std::pair<std::string, std::unique_ptr<std::set<std::string>>>(sectionKey, std::move(fieldsSet)) );
-    } else {
-        fieldSetIt->second->insert(name);
-    }
-
-    return 1;
 }
 
 template<>

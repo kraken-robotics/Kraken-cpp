@@ -12,8 +12,7 @@ add_definitions(-DDEBUG=1)
 
 file(GLOB_RECURSE KRAKEN_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources/*.cpp")
 
-file(GLOB_RECURSE INIREADER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/third_party/iniReader/*.c"
-                                    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/iniReader/*.cpp")
+file(GLOB_RECURSE INIREADER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/third_party/iniReader/*.cpp")
 
 add_executable(Kraken main.cpp ${KRAKEN_SOURCES} ${INIREADER_SOURCES})
 include(tests/CMakeLists.txt)

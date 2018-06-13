@@ -12,6 +12,7 @@
 #include <set>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 // Read an INI file into easy-to-access name/value pairs. (Note that I've gone
 // for simplicity here rather than speed, but it should be pretty decent.)
@@ -48,16 +49,11 @@ public:
 
 private:
     static void safeToLower(std::string& stringRef) noexcept;
-
-    int _error;
-    std::map<std::string, std::string> _values;
-    // Because we want to retain the original casing in _fields, but
-    // want lookups to be case-insensitive, we need both _fields and _values
-    std::set<std::string> _sections;
-    std::map<std::string, std::unique_ptr<std::set<std::string>>> _fields;
+    void parseFile(const std::string& filename);
     static std::string makeKey(const std::string &section, const std::string &name) noexcept;
-    static int valueHandler(void *user, const char *section, const char *name,
-                            const char *value);
+
+    std::unordered_map<std::string, std::string> values_;
+
 };
 
 #endif  // __INIREADER_H__
