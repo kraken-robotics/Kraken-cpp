@@ -4,7 +4,7 @@ namespace kraken
 {
     void ConfigurationModule::registerCallback(ConfigurationCallback callback)
     {
-        callbacks_holder_ += callback;
+        callbacks_holder_ += std::move(callback);
     }
 
     void ConfigurationModule::changeSection(ConfigurationHandler &configuration_handler, std::string new_section)
