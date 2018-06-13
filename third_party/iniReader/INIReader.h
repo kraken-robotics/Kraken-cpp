@@ -27,33 +27,24 @@ public:
     int ParseError();
 
     // Get a string value from INI file, returning default_value if not found.
-    std::string Get(const std::string& section, const std::string& name,
-                    std::string default_value);
+    std::string getString(const std::string &section, const std::string &name, const std::string &default_value = "");
 
     // Get an integer (long) value from INI file, returning default_value if
     // not found or not a valid integer (decimal "1234", "-1234", or hex "0x4d2").
-    int GetInteger(const std::string& section, const std::string& name, int default_value);
+    int getInteger(const std::string &section, const std::string &name, int default_value);
 
     // Get a real (floating point double) value from INI file, returning
     // default_value if not found or not a valid floating point value
     // according to strtod().
-    double GetReal(const std::string& section, const std::string& name, double default_value);
+    float getReal(const std::string &section, const std::string &name, float default_value);
 
     // Get a boolean value from INI file, returning default_value if not found or if
     // not a valid true/false value. Valid true values are "true", "yes", "on", "1",
     // and valid false values are "false", "no", "off", "0" (not case sensitive).
-    bool GetBoolean(const std::string& section, const std::string& name, bool default_value);
+    bool getBoolean(const std::string &section, const std::string &name, bool default_value);
 
     template<class T>
     T get(const std::string& sectionName, const std::string& name, T default_value);
-
-    // Returns all the section names from the INI file, in alphabetical order, but in the
-    // original casing
-    std::set<std::string> GetSections() const;
-
-    // Returns all the field names from a section in the INI file, in alphabetical order,
-    // but in the original casing. Returns an empty set if the field name is unknown
-    std::set<std::string> GetFields(const std::string& section) const;
 
 private:
     static void safeToLower(std::string& stringRef) noexcept;
@@ -64,9 +55,9 @@ private:
     // want lookups to be case-insensitive, we need both _fields and _values
     std::set<std::string> _sections;
     std::map<std::string, std::set<std::string>*> _fields;
-    static std::string MakeKey(std::string section, std::string name) noexcept;
-    static int ValueHandler(void* user, const char* section, const char* name,
-                            const char* value);
+    static std::string makeKey(const std::string &section, const std::string &name) noexcept;
+    static int valueHandler(void *user, const char *section, const char *name,
+                            const char *value);
 };
 
 #endif  // __INIREADER_H__

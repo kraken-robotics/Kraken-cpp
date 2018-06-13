@@ -18,7 +18,7 @@ TEST_CASE("Configuration", "[Configuration]")
     REQUIRE(handler.get<int>(ConfigKey::NavmeshObstaclesDilatation) == 100);
     REQUIRE(handler.get<std::string>(ConfigKey::NavmeshFilename) == "navmesh.krk");
     REQUIRE(handler.get<std::string>(ConfigKey::NavmeshFilename, ConfigModule::Navmesh) == "navmesh.krk");
-    REQUIRE(handler.get<double>(ConfigKey::PrecisionTrace) == 0.02f);
+    REQUIRE(handler.get<float>(ConfigKey::PrecisionTrace) == 0.02f);
 
     //Register a function to be called when the configuration changes for Navmesh module
     handler.registerCallback(ConfigModule::Navmesh, [] (ConfigurationHandler& ch) {

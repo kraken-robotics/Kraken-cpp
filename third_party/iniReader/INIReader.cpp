@@ -13,7 +13,7 @@
 
 INIReader::INIReader(std::string filename)
 {
-    _error = ini_parse(filename.c_str(), ValueHandler, this);
+    _error = ini_parse(filename.c_str(), valueHandler, this);
 #if DEBUG
     if(_error == -1)
     {
@@ -35,37 +35,7 @@ int INIReader::ParseError()
     return _error;
 }
 
-std::string INIReader::Get(const std::string& section, const std::string& name, std::string default_value)
-{
-    std::string key = MakeKey(section, name);
-    return _values.count(key) ? _values[key] : default_value;
-}
-
-int INIReader::GetInteger(const std::string& section, const std::string& name, int default_value)
-{
-    std::string valstr = Get(section, name, "");
-    const char* value = valstr.c_str();
-    // This parses "1234" (decimal) and also "0x4D2" (hex)
-    try {
-        auto parsed = std::stoi(value);
-        return parsed;
-    }
-    catch (std::invalid_argument& e)
-    {
-        return default_value;
-    }
-}
-
-double INIReader::GetReal(const std::string& section, const std::string& name, double default_value)
-{
-    std::string valstr = Get(section, name, "");
-    const char* value = valstr.c_str();
-    char* end;
-    double n = strtod(value, &end);
-    return end > value ? n : default_value;
-}
-
-void INIReader::safeToLower(std::string& stringRef)
+void INIReader::safeToLower(std::string& stringRef) noexcept
 {
     try
     {
@@ -77,9 +47,43 @@ void INIReader::safeToLower(std::string& stringRef)
     }
 }
 
-bool INIReader::GetBoolean(const std::string& section, const std::string& name, bool default_value)
+std::string INIReader::getString(const std::string &section, const std::string &name, const std::string &default_value)
 {
-    std::string valstr = Get(section, name, "");
+    std::string key = makeKey(section, name);
+    return _values.count(key) ? _values[key] : default_value;
+}
+
+int INIReader::getInteger(const std::string &section, const std::string &name, int default_value)
+{
+    auto valstr = getString(section, name);
+    // This parses "1234" (decimal) and also "0x4D2" (hex)
+    try {
+        auto parsed = std::stoi(valstr);
+        return parsed;
+    }
+    catch (std::invalid_argument& e)
+    {
+        return default_value;
+    }
+}
+
+float INIReader::getReal(const std::string &section, const std::string &name, float default_value)
+{
+    auto valstr = getString(section, name);
+
+    try {
+        auto parsed = std::stof(valstr);
+        return parsed;
+    }
+    catch (std::invalid_argument& e)
+    {
+        return default_value;
+    }
+}
+
+bool INIReader::getBoolean(const std::string &section, const std::string &name, bool default_value)
+{
+    std::string valstr = getString(section, name);
     // Convert to lower case to make std::string comparisons case-insensitive
     safeToLower(valstr);
     if (valstr == "true" || valstr == "yes" || valstr == "on" || valstr == "1")
@@ -96,35 +100,21 @@ bool INIReader::GetBoolean(const std::string& section, const std::string& name, 
     }
 }
 
-std::set<std::string> INIReader::GetSections() const
-{
-    return _sections;
-}
-
-std::set<std::string> INIReader::GetFields(const std::string& section) const
-{
-    std::string sectionKey = section;
-    std::transform(sectionKey.begin(), sectionKey.end(), sectionKey.begin(), ::tolower);
-    auto fieldSetIt = _fields.find(sectionKey);
-    if(fieldSetIt==_fields.end())
-        return std::set<std::string>();
-    return *(fieldSetIt->second);
-}
-
-std::string INIReader::MakeKey(std::string section, std::string name)
+std::string INIReader::makeKey(const std::string &section, const std::string &name) noexcept
 {
     std::string key = section + "=" + name;
     // Convert to lower case to make section/name lookups case-insensitive
     safeToLower(key);
+    return key;
 }
 
-int INIReader::ValueHandler(void* user, const char* section, const char* name,
-                            const char* value)
+int INIReader::valueHandler(void *user, const char *section, const char *name,
+                            const char *value)
 {
     auto reader = (INIReader*)user;
 
     // Add the value to the lookup map
-    std::string key = MakeKey(section, name);
+    std::string key = makeKey(section, name);
     if (!reader->_values[key].empty())
         reader->_values[key] += "\n";
     reader->_values[key] += value;
@@ -153,23 +143,24 @@ int INIReader::ValueHandler(void* user, const char* section, const char* name,
 template<>
 int INIReader::get<int>(const std::string& sectionName, const std::string& name, int default_value)
 {
-    return GetInteger(sectionName, name, default_value);
+    return getInteger(sectionName, name, default_value);
 }
 
 template<>
-double INIReader::get<double>(const std::string& sectionName, const std::string& name, double default_value)
+float INIReader::get<float>(const std::string& sectionName, const std::string& name, float default_value)
 {
-    return GetReal(sectionName, name, default_value);
+    return getReal(sectionName, name, default_value);
 }
 
 template<>
 bool INIReader::get<bool>(const std::string& sectionName, const std::string& name, bool default_value)
 {
-    return GetBoolean(sectionName, name, default_value);
+    return getBoolean(sectionName, name, default_value);
 }
 
 template<>
-std::string INIReader::get<std::string>(const std::string& sectionName, const std::string& name, std::string default_value)
+std::string INIReader::get<std::string>(const std::string& sectionName, const std::string& name,
+                                        std::string default_value)
 {
-    return Get(sectionName, name, std::move(default_value));
+    return getString(sectionName, name, std::move(default_value));
 }

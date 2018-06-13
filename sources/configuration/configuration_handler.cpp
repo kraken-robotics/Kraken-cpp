@@ -9,17 +9,12 @@ namespace kraken
     }
 
     template<>
-    long ConfigurationHandler::getDefaultValue<long>(ConfigKey key) {
-        return static_cast<long>(default_values_[static_cast<int>(key)].numeric_value);
-    };
-
-    template<>
     int ConfigurationHandler::getDefaultValue<int>(ConfigKey key) {
-        return static_cast<int>(getDefaultValue<long>(key));
+        return static_cast<int>(default_values_[static_cast<int>(key)].numeric_value);
     };
 
     template<>
-    double ConfigurationHandler::getDefaultValue<double>(ConfigKey key) {
+    float ConfigurationHandler::getDefaultValue<float>(ConfigKey key) {
         return default_values_[static_cast<int>(key)].numeric_value;
     };
 

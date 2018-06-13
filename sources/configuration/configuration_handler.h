@@ -78,13 +78,13 @@ namespace kraken {
         //Structure holding all possible types of parameter value.
         //It should be an union, but it will require a bit more work because of the std::string
         struct ConfigurationParameter {
-            double numeric_value = 0;
+            float numeric_value = 0;
             bool boolean_value = false;
             std::string string_value = {};
 
             ConfigurationParameter() = default;
 
-            explicit ConfigurationParameter(double value) { numeric_value = value; }
+            explicit ConfigurationParameter(float value) { numeric_value = value; }
 
             explicit ConfigurationParameter(int value) { numeric_value = value; }
 
