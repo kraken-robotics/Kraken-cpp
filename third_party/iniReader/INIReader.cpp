@@ -41,14 +41,19 @@ std::string INIReader::Get(const std::string& section, const std::string& name, 
     return _values.count(key) ? _values[key] : default_value;
 }
 
-long INIReader::GetInteger(const std::string& section, const std::string& name, long default_value)
+int INIReader::GetInteger(const std::string& section, const std::string& name, int default_value)
 {
     std::string valstr = Get(section, name, "");
     const char* value = valstr.c_str();
-    char* end;
     // This parses "1234" (decimal) and also "0x4D2" (hex)
-    long n = strtol(value, &end, 0);
-    return end > value ? n : default_value;
+    try {
+        auto parsed = std::stoi(value);
+        return parsed;
+    }
+    catch (std::invalid_argument& e)
+    {
+        return default_value;
+    }
 }
 
 double INIReader::GetReal(const std::string& section, const std::string& name, double default_value)
@@ -60,11 +65,23 @@ double INIReader::GetReal(const std::string& section, const std::string& name, d
     return end > value ? n : default_value;
 }
 
+void INIReader::safeToLower(std::string& stringRef)
+{
+    try
+    {
+        std::transform(stringRef.begin(), stringRef.end(), stringRef.begin(), ::tolower);
+    }
+    catch (std::bad_alloc& e)
+    {
+        stringRef = "";
+    }
+}
+
 bool INIReader::GetBoolean(const std::string& section, const std::string& name, bool default_value)
 {
     std::string valstr = Get(section, name, "");
     // Convert to lower case to make std::string comparisons case-insensitive
-    std::transform(valstr.begin(), valstr.end(), valstr.begin(), ::tolower);
+    safeToLower(valstr);
     if (valstr == "true" || valstr == "yes" || valstr == "on" || valstr == "1")
     {
         return true;
@@ -98,8 +115,7 @@ std::string INIReader::MakeKey(std::string section, std::string name)
 {
     std::string key = section + "=" + name;
     // Convert to lower case to make section/name lookups case-insensitive
-    std::transform(key.begin(), key.end(), key.begin(), ::tolower);
-    return key;
+    safeToLower(key);
 }
 
 int INIReader::ValueHandler(void* user, const char* section, const char* name,
@@ -135,15 +151,9 @@ int INIReader::ValueHandler(void* user, const char* section, const char* name,
 }
 
 template<>
-long INIReader::get<long>(const std::string& sectionName, const std::string& name, long default_value)
-{
-    return GetInteger(sectionName, name, default_value);
-}
-
-template<>
 int INIReader::get<int>(const std::string& sectionName, const std::string& name, int default_value)
 {
-    return static_cast<int>(get<long>(sectionName, name, default_value));
+    return GetInteger(sectionName, name, default_value);
 }
 
 template<>

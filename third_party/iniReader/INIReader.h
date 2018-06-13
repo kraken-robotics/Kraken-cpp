@@ -32,7 +32,7 @@ public:
 
     // Get an integer (long) value from INI file, returning default_value if
     // not found or not a valid integer (decimal "1234", "-1234", or hex "0x4d2").
-    long GetInteger(const std::string& section, const std::string& name, long default_value);
+    int GetInteger(const std::string& section, const std::string& name, int default_value);
 
     // Get a real (floating point double) value from INI file, returning
     // default_value if not found or not a valid floating point value
@@ -56,13 +56,15 @@ public:
     std::set<std::string> GetFields(const std::string& section) const;
 
 private:
+    static void safeToLower(std::string& stringRef) noexcept;
+
     int _error;
     std::map<std::string, std::string> _values;
     // Because we want to retain the original casing in _fields, but
     // want lookups to be case-insensitive, we need both _fields and _values
     std::set<std::string> _sections;
     std::map<std::string, std::set<std::string>*> _fields;
-    static std::string MakeKey(std::string section, std::string name);
+    static std::string MakeKey(std::string section, std::string name) noexcept;
     static int ValueHandler(void* user, const char* section, const char* name,
                             const char* value);
 };

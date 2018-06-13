@@ -15,7 +15,7 @@ namespace kraken {
      * - The enumerations are ordered by module (see ConfigModule). If you have to modify this enum, keep the groups in the
      * same order and let the first key of each group at the first place. If you don't do this, update the array
      * modules_limits according to your changes.
-     * - The default_values_ array initializer list directly depends on the order of the enumerations values.
+     * - The default_values_ initializer list directly depends on the order of the enumerations values.
      */
     namespace ConfigKeys {
         enum class ConfigKeys {
