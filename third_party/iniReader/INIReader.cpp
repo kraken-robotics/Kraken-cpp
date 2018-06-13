@@ -11,12 +11,18 @@
 
 #endif
 
-#include <fstream>
 
-INIReader::INIReader(std::string filename)
+#if USE_FILESYSTEM
+#include <cstdio>
+#include <cstdlib>
+#endif
+
+#if USE_FILESYSTEM
+void INIReader::loadFromFile(const std::string& filename)
 {
     parseFile(filename);
 }
+#endif
 
 void INIReader::safeToLower(std::string& stringRef) noexcept
 {
@@ -30,13 +36,66 @@ void INIReader::safeToLower(std::string& stringRef) noexcept
     }
 }
 
+void INIReader::parseNewValue(const std::string &section, const std::string &line)
+{
+    auto separatorPosition = line.find(':');
+    if(separatorPosition == std::string::npos)
+    {
+        separatorPosition = line.find('=');
+        if(separatorPosition == std::string::npos)
+        {
+            throw (std::invalid_argument("Malformed INI. Incorrect separator in key:value pair at line " + line));
+        }
+    }
+
+    auto key = makeKey(section, line.substr(0, separatorPosition));
+    auto value = line.substr(separatorPosition + 1, line.length());
+    values_.emplace(key, value);
+}
+
+std::string INIReader::parseNewSection(const std::string& line)
+{
+    auto endPosition = line.find(']') - 1;
+    if(endPosition == std::string::npos)
+    {
+        throw (std::invalid_argument("Malformed INI. Couldn't find end section delimiter ']' at line " + line));
+    }
+    return line.substr(1, endPosition);
+}
+
 void INIReader::parseFile(const std::string& filename)
 {
-    std::ifstream infile(filename);
-    std::string currentSection;
-
-    for( std::string line; getline( infile, line ); )
+    FILE* file = fopen(filename.c_str(), "r");
+    if (!file)
     {
+        throw std::invalid_argument("Could not open configuration file.");
+    }
+
+    //Get file size
+    fseek (file , 0 , SEEK_END);
+    auto fileSize = (size_t)ftell (file);
+    rewind (file);
+
+    // allocate memory to contain the whole file
+    auto buffer = new char[fileSize];
+    fread(buffer,1, (long)fileSize,file);
+
+    //Store the content of the buffer in a string and delete it before calling parseString.
+    std::string fileContent = std::string(buffer);
+    delete(buffer);
+    loadFromString(fileContent);
+}
+
+void INIReader::loadFromString(std::string fileContent)
+{
+    std::string currentSection;
+    size_t pos;
+
+    while((pos = fileContent.find('\n')) != std::string::npos)
+    {
+        auto line = fileContent.substr(0, pos);
+        fileContent.erase(0, (int)pos + 1);
+
         //Empty line, skip it
         if(line.length() == 0)
         {
@@ -52,33 +111,14 @@ void INIReader::parseFile(const std::string& filename)
         else if(firstChar == '[')
         {
             //change section
-            auto endPosition = line.find(']') - 1;
-            if(endPosition == std::string::npos)
-            {
-                throw (std::invalid_argument("Malformed INI. Couldn't find end section delimiter ']' at line " + line));
-            }
-            currentSection = line.substr(1, endPosition);
+            currentSection = parseNewSection(line);
         }
         else
         {
             //register new key:value pair
-            auto separatorPosition = line.find(':');
-            if(separatorPosition == std::string::npos)
-            {
-                separatorPosition = line.find('=');
-                if(separatorPosition == std::string::npos)
-                {
-                    throw (std::invalid_argument("Malformed INI. Incorrect separator in key:value pair at line " + line));
-                }
-            }
-
-            auto key = makeKey(currentSection, line.substr(0, separatorPosition));
-            auto value = line.substr(separatorPosition + 1, line.length());
-            values_.emplace(key, value);
+            parseNewValue(currentSection, line);
         }
     }
-
-
 }
 
 std::string INIReader::getString(const std::string &section, const std::string &name, std::string default_value) const noexcept

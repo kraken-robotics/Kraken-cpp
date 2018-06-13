@@ -11,21 +11,22 @@
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 #include <memory>
 #include <unordered_map>
+
+#define USE_FILESYSTEM 1
 
 // Read an INI file into easy-to-access name/value pairs. (Note that I've gone
 // for simplicity here rather than speed, but it should be pretty decent.)
 class INIReader
 {
 public:
-    // Construct INIReader and parse given filename. See ini.h for more info
-    // about the parsing.
-    explicit INIReader(std::string filename);
+#if USE_FILESYSTEM
+    void loadFromFile(const std::string& filename);
+#endif
 
-    // Return the result of ini_parse(), i.e., 0 on success, line number of
-    // first error on parse error, or -1 on file open error.
-    int ParseError() const noexcept;
+    void loadFromString(std::string fileContent);
 
     // Get a string value from INI file, returning default_value if not found.
     std::string getString(const std::string &section, const std::string &name, std::string default_value = "") const noexcept;
@@ -49,6 +50,8 @@ public:
 
 private:
     static void safeToLower(std::string& stringRef) noexcept;
+    void parseNewValue(const std::string &section, const std::string &line);
+    std::string parseNewSection(const std::string& line);
     void parseFile(const std::string& filename);
     static std::string makeKey(const std::string &section, const std::string &name) noexcept;
 

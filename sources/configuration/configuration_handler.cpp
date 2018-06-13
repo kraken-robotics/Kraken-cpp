@@ -2,10 +2,21 @@
 
 namespace kraken
 {
-    ConfigurationHandler::ConfigurationHandler(const std::string& filename) :
-        ini_reader_{filename},
+    ConfigurationHandler::ConfigurationHandler() :
         modules_(module_count)
     {
+
+    }
+
+#if USE_FILESYSTEM
+    void ConfigurationHandler::loadFromFile(const std::string& filename)
+    {
+        ini_reader_.loadFromFile(filename);
+    }
+#endif
+    void ConfigurationHandler::loadFromString(const std::string& fileContent)
+    {
+        ini_reader_.loadFromString(fileContent);
     }
 
     template<>

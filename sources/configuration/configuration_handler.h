@@ -7,6 +7,8 @@
 #include "configuration_module.h"
 #include "iniReader/INIReader.h"
 
+#include <iostream>
+
 namespace kraken {
     /*
      * Before modifying this enum, consider that:
@@ -94,7 +96,12 @@ namespace kraken {
         };
 
     public:
-        explicit ConfigurationHandler(const std::string &filename);
+        ConfigurationHandler();
+
+#if USE_FILESYSTEM
+        void loadFromFile(const std::string& filename);
+#endif
+        void loadFromString(const std::string& fileContent);
 
         void registerCallback(ConfigModule module_enum, ConfigurationCallback callback);
 
