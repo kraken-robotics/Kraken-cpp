@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <memory>
 
 // Read an INI file into easy-to-access name/value pairs. (Note that I've gone
 // for simplicity here rather than speed, but it should be pretty decent.)
@@ -20,31 +21,30 @@ public:
     // Construct INIReader and parse given filename. See ini.h for more info
     // about the parsing.
     explicit INIReader(std::string filename);
-    ~INIReader();
 
     // Return the result of ini_parse(), i.e., 0 on success, line number of
     // first error on parse error, or -1 on file open error.
-    int ParseError();
+    int ParseError() const noexcept;
 
     // Get a string value from INI file, returning default_value if not found.
-    std::string getString(const std::string &section, const std::string &name, const std::string &default_value = "");
+    std::string getString(const std::string &section, const std::string &name, std::string default_value = "") const noexcept;
 
     // Get an integer (long) value from INI file, returning default_value if
     // not found or not a valid integer (decimal "1234", "-1234", or hex "0x4d2").
-    int getInteger(const std::string &section, const std::string &name, int default_value);
+    int getInteger(const std::string &section, const std::string &name, int default_value) const noexcept;
 
     // Get a real (floating point double) value from INI file, returning
     // default_value if not found or not a valid floating point value
     // according to strtod().
-    float getReal(const std::string &section, const std::string &name, float default_value);
+    float getReal(const std::string &section, const std::string &name, float default_value) const noexcept;
 
     // Get a boolean value from INI file, returning default_value if not found or if
     // not a valid true/false value. Valid true values are "true", "yes", "on", "1",
     // and valid false values are "false", "no", "off", "0" (not case sensitive).
-    bool getBoolean(const std::string &section, const std::string &name, bool default_value);
+    bool getBoolean(const std::string &section, const std::string &name, bool default_value) const noexcept;
 
     template<class T>
-    T get(const std::string& sectionName, const std::string& name, T default_value);
+    T get(const std::string& sectionName, const std::string& name, T default_value) const noexcept;
 
 private:
     static void safeToLower(std::string& stringRef) noexcept;
@@ -54,7 +54,7 @@ private:
     // Because we want to retain the original casing in _fields, but
     // want lookups to be case-insensitive, we need both _fields and _values
     std::set<std::string> _sections;
-    std::map<std::string, std::set<std::string>*> _fields;
+    std::map<std::string, std::unique_ptr<std::set<std::string>>> _fields;
     static std::string makeKey(const std::string &section, const std::string &name) noexcept;
     static int valueHandler(void *user, const char *section, const char *name,
                             const char *value);

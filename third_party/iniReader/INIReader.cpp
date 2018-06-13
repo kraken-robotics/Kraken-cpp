@@ -9,6 +9,7 @@
 
 #if DEBUG
 #include <iostream>
+
 #endif
 
 INIReader::INIReader(std::string filename)
@@ -22,15 +23,7 @@ INIReader::INIReader(std::string filename)
 #endif
 }
 
-INIReader::~INIReader()
-{
-    // Clean up the field sets
-    std::map<std::string, std::set<std::string>*>::iterator fieldSetsIt;
-    for (fieldSetsIt = _fields.begin(); fieldSetsIt != _fields.end(); ++fieldSetsIt)
-        delete fieldSetsIt->second;
-}
-
-int INIReader::ParseError()
+int INIReader::ParseError() const noexcept
 {
     return _error;
 }
@@ -47,13 +40,13 @@ void INIReader::safeToLower(std::string& stringRef) noexcept
     }
 }
 
-std::string INIReader::getString(const std::string &section, const std::string &name, const std::string &default_value)
+std::string INIReader::getString(const std::string &section, const std::string &name, std::string default_value) const noexcept
 {
     std::string key = makeKey(section, name);
-    return _values.count(key) ? _values[key] : default_value;
+    return _values.count(key) ? _values.at(key) : default_value;
 }
 
-int INIReader::getInteger(const std::string &section, const std::string &name, int default_value)
+int INIReader::getInteger(const std::string &section, const std::string &name, int default_value) const noexcept
 {
     auto valstr = getString(section, name);
     // This parses "1234" (decimal) and also "0x4D2" (hex)
@@ -67,7 +60,7 @@ int INIReader::getInteger(const std::string &section, const std::string &name, i
     }
 }
 
-float INIReader::getReal(const std::string &section, const std::string &name, float default_value)
+float INIReader::getReal(const std::string &section, const std::string &name, float default_value) const noexcept
 {
     auto valstr = getString(section, name);
 
@@ -81,7 +74,7 @@ float INIReader::getReal(const std::string &section, const std::string &name, fl
     }
 }
 
-bool INIReader::getBoolean(const std::string &section, const std::string &name, bool default_value)
+bool INIReader::getBoolean(const std::string &section, const std::string &name, bool default_value) const noexcept
 {
     std::string valstr = getString(section, name);
     // Convert to lower case to make std::string comparisons case-insensitive
@@ -126,41 +119,40 @@ int INIReader::valueHandler(void *user, const char *section, const char *name,
     std::string sectionKey = section;
     std::transform(sectionKey.begin(), sectionKey.end(), sectionKey.begin(), ::tolower);
 
-    std::set<std::string>* fieldsSet;
     auto fieldSetIt = reader->_fields.find(sectionKey);
     if(fieldSetIt==reader->_fields.end())
     {
-        fieldsSet = new std::set<std::string>();
-        reader->_fields.insert ( std::pair<std::string, std::set<std::string>*>(sectionKey,fieldsSet) );
+        auto fieldsSet = std::unique_ptr<std::set<std::string>>(new std::set<std::string>);
+        fieldsSet->insert(name);
+        reader->_fields.insert ( std::pair<std::string, std::unique_ptr<std::set<std::string>>>(sectionKey, std::move(fieldsSet)) );
     } else {
-        fieldsSet=fieldSetIt->second;
+        fieldSetIt->second->insert(name);
     }
-    fieldsSet->insert(name);
 
     return 1;
 }
 
 template<>
-int INIReader::get<int>(const std::string& sectionName, const std::string& name, int default_value)
+int INIReader::get<int>(const std::string& sectionName, const std::string& name, int default_value) const noexcept
 {
     return getInteger(sectionName, name, default_value);
 }
 
 template<>
-float INIReader::get<float>(const std::string& sectionName, const std::string& name, float default_value)
+float INIReader::get<float>(const std::string& sectionName, const std::string& name, float default_value) const noexcept
 {
     return getReal(sectionName, name, default_value);
 }
 
 template<>
-bool INIReader::get<bool>(const std::string& sectionName, const std::string& name, bool default_value)
+bool INIReader::get<bool>(const std::string& sectionName, const std::string& name, bool default_value) const noexcept
 {
     return getBoolean(sectionName, name, default_value);
 }
 
 template<>
 std::string INIReader::get<std::string>(const std::string& sectionName, const std::string& name,
-                                        std::string default_value)
+                                        std::string default_value) const noexcept
 {
     return getString(sectionName, name, std::move(default_value));
 }
