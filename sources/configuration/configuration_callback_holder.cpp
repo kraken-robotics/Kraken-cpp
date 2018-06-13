@@ -9,9 +9,8 @@ namespace kraken
 
     void ConfigurationCallbackHolder::operator()(ConfigurationHandler &configuration_handler) const
     {
-        auto iterator = callbacks_.cbegin();
-        for (; iterator != callbacks_.cend(); ++iterator) {
-            (*iterator)(configuration_handler);
+        for (const auto& iterator : callbacks_) {
+            (iterator)(configuration_handler);
         }
     }
 }
