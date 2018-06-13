@@ -12,11 +12,13 @@ namespace kraken
     void ConfigurationHandler::loadFromFile(const std::string& filename)
     {
         ini_reader_.loadFromFile(filename);
+        callCallbacks();
     }
 #endif
     void ConfigurationHandler::loadFromString(const std::string& fileContent)
     {
         ini_reader_.loadFromString(fileContent);
+        callCallbacks();
     }
 
     template<>
@@ -81,5 +83,13 @@ namespace kraken
     ConfigurationModule* ConfigurationHandler::getModule(ConfigModule module_enum)
     {
         return &modules_[static_cast<int>(module_enum)];
+    }
+
+    void ConfigurationHandler::callCallbacks()
+    {
+        for(const auto& module_instance : modules_)
+        {
+            module_instance.callCallbacks(*this);
+        }
     }
 }

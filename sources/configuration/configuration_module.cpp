@@ -12,12 +12,17 @@ namespace kraken
         if (new_section != current_section_)
         {
             current_section_ = new_section;
-            callbacks_holder_(configuration_handler);
+            callCallbacks(configuration_handler);
         }
     }
 
     std::string ConfigurationModule::getCurrentSection()
     {
         return current_section_;
+    }
+
+    void ConfigurationModule::callCallbacks(ConfigurationHandler &configuration_handler) const
+    {
+        callbacks_holder_(configuration_handler);
     }
 }

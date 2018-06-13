@@ -57,10 +57,18 @@ TEST_CASE("Configuration", "[Configuration]")
             REQUIRE (ch.get<int>(ConfigKey::LongestEdgeInNavmesh) == 2);
             REQUIRE (ch.get<bool>(ConfigKey::EnableDebug));
         }
+        else
+        {
+            //Test load from string
+            REQUIRE (ch.get<int>(ConfigKey::LongestEdgeInNavmesh) == 3);
+            REQUIRE (!ch.get<bool>(ConfigKey::EnableDebug));
+        }
         passCount++;
     });
 
     handler.changeModuleSection(ConfigModule::Navmesh, "test1");
     handler.changeModuleSection(ConfigModule::ResearchMechanical, "test1");
     handler.changeModuleSection({ConfigModule::Navmesh, ConfigModule::ResearchMechanical}, "test2");
+
+    handler.loadFromString("[test2]\n LongestEdgeInNavmesh=3\nEnableDebug=false");
 }

@@ -36,8 +36,11 @@ void INIReader::safeToLower(std::string& stringRef) noexcept
     }
 }
 
-void INIReader::parseNewValue(const std::string &section, const std::string &line)
+void INIReader::parseNewValue(const std::string &section, std::string &line)
 {
+    //remove white spaces
+    line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
+
     auto separatorPosition = line.find(':');
     if(separatorPosition == std::string::npos)
     {
@@ -88,11 +91,17 @@ void INIReader::parseFile(const std::string& filename)
 
 void INIReader::loadFromString(std::string fileContent)
 {
+    values_.clear();
     std::string currentSection;
     size_t pos;
+    auto parsedLastLine = false;
 
-    while((pos = fileContent.find('\n')) != std::string::npos)
+    while(!parsedLastLine)
     {
+        //This need to be out of the while condition so that the last line must not be terminated by an '\n'
+        pos = fileContent.find('\n');
+        parsedLastLine = (pos == std::string::npos);
+
         auto line = fileContent.substr(0, pos);
         fileContent.erase(0, (int)pos + 1);
 

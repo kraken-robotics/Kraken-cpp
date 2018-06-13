@@ -19,6 +19,8 @@ namespace kraken
 
         std::string getCurrentSection();
 
+        void callCallbacks(ConfigurationHandler &configuration_handler) const;
+
     private:
         ConfigurationCallbackHolder callbacks_holder_;
         std::string current_section_ = {"default"};

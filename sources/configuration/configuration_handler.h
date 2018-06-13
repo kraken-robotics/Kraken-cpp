@@ -132,6 +132,8 @@ namespace kraken {
 
         ConfigurationModule* getModule(ConfigModule module_enum);
 
+        void callCallbacks();
+
         template<class T>
         T getDefaultValue(ConfigKey key);
 

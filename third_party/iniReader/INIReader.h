@@ -50,7 +50,7 @@ public:
 
 private:
     static void safeToLower(std::string& stringRef) noexcept;
-    void parseNewValue(const std::string &section, const std::string &line);
+    void parseNewValue(const std::string &section, std::string &line);
     std::string parseNewSection(const std::string& line);
     void parseFile(const std::string& filename);
     static std::string makeKey(const std::string &section, const std::string &name) noexcept;
