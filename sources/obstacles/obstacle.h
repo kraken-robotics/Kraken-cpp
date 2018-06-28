@@ -6,19 +6,22 @@
 
 namespace kraken
 {
+    class RectangularObstacle;
 
     class Obstacle
     {
     public:
-        Obstacle(const Vector2D &rotation_center);
+        explicit Obstacle(const Vector2D &rotation_center) noexcept;
         virtual ~Obstacle() = default;
-        virtual bool isInObstacle(const Vector2D &pos) const = 0;
+        virtual bool isInObstacle(const Vector2D &pos) const noexcept = 0;
         virtual float squaredDistance(const Vector2D &pos) const = 0;
-        virtual void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength, std::vector<Vector2D> &vector_2d_list) const = 0;
-        virtual bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const = 0;
-        virtual bool operator==(const Obstacle &rhs) const;
-        //virtual bool isColliding(RectangularObstacle obs)
+        virtual void getExpandedConvexHull(const float &expansion, const float &longestAllowedLength,
+                                           std::vector<Vector2D> &vector_2d_list) const = 0;
+        virtual bool isColliding(const Vector2D &point_a, const Vector2D &point_b) const noexcept = 0;
+        virtual bool isColliding(const RectangularObstacle &obs) const noexcept = 0;
+        virtual bool operator==(const Obstacle &rhs) const noexcept;
 
+        Vector2D getRotationCenter() const noexcept;
     protected:
         Vector2D rotation_center_;
 
