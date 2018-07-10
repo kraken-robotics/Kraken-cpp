@@ -5,10 +5,11 @@
 #include "navmesh_triangle.h"
 #include "../obstacles/obstacle.h"
 #include <vector>
+#include <memory>
 
 namespace kraken
 {
-    class NavmeshEdge
+    class NavmeshEdge : public std::enable_shared_from_this<NavmeshEdge>
     {
     public:
         NavmeshEdge(const NavmeshNode &p1, const NavmeshNode &p2);
@@ -32,6 +33,7 @@ namespace kraken
         bool isAdjacent(const NavmeshEdge &p) const;
         float getOrientation(const NavmeshNode &origin) const;
         bool containsNode(const NavmeshNode &p) const;
+        std::shared_ptr<NavmeshNode> getPoint(int index) const;
 
         bool operator==(const NavmeshEdge &rhs) const;
 
@@ -43,10 +45,9 @@ namespace kraken
         int length_;
         int nb_;
         float orientation_;
-        NavmeshNode* points_;
-        NavmeshTriangle* triangles_;
-        int nbTriangles_;
-        std::vector<Obstacle*> obstructing_obstacles_;
+        std::vector<std::shared_ptr<NavmeshNode>> points_;
+        std::vector<std::shared_ptr<NavmeshTriangle>> triangles_;
+        std::vector<std::shared_ptr<Obstacle>> obstructing_obstacles_;
     };
 
 }

@@ -2,10 +2,13 @@
 #define TESTS_NAVMESH_TRIANGLE_H
 
 #include "navmesh_edge.h"
+#include <vector>
+#include <memory>
+
 
 namespace kraken
 {
-    class NavmeshTriangle
+    class NavmeshTriangle : public std::enable_shared_from_this<NavmeshTriangle>
     {
     public:
         NavmeshTriangle(const NavmeshEdge &a, const NavmeshEdge &b, const NavmeshEdge &c);
@@ -21,8 +24,8 @@ namespace kraken
         void updateArea();
         bool checkTriangle(const NavmeshEdge &e1, const NavmeshEdge &e2, const NavmeshEdge &e3) const;
 
-        NavmeshNode *points_;
-        NavmeshEdge *edges_;
+        std::vector<std::shared_ptr<NavmeshNode>> points_;
+        std::vector<std::weak_ptr<NavmeshEdge>> edges_;
         int* edgesNb_;
         int area_;
     };
