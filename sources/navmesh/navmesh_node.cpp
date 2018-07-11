@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "navmesh_node.h"
 #include "navmesh_edge.h"
 
@@ -6,22 +7,22 @@ namespace kraken
 
     int NavmeshNode::nb_total_ = 0;
 
-    NavmeshNode::NavmeshNode(const Vector2D &pos) : position_(pos), nb_(nb_total_++)
+    NavmeshNode::NavmeshNode(const Vector2D &pos) : nb_(nb_total_++), position_(pos)
     {
 
     }
 
-    void NavmeshNode::addEdge(const NavmeshEdge &e)
+    void NavmeshNode::addEdge(const NavmeshEdge &e) noexcept
     {
         edges_.emplace(e);
     }
 
-    void NavmeshNode::removeEdge(const NavmeshEdge &e)
+    void NavmeshNode::removeEdge(const NavmeshEdge &e) noexcept
     {
         edges_.erase(e);
     }
 
-    void NavmeshNode::updateNeighbours()
+    void NavmeshNode::updateNeighbours() noexcept(false)
     {
         neighbours_.clear();
         for(const auto & e : edges_)
@@ -39,7 +40,7 @@ namespace kraken
         }
     }
 
-    std::set<NavmeshEdge>::size_type NavmeshNode::getNbNeighbours() const
+    std::set<NavmeshEdge>::size_type NavmeshNode::getNbNeighbours() const noexcept (false)
     {
         if (neighbours_.size() != edges_.size())
             throw std::runtime_error("Size is different");
@@ -53,7 +54,7 @@ namespace kraken
         return *it;
     }
 
-    NavmeshNode NavmeshNode::getNeighbourNode(int index) const
+    std::shared_ptr<NavmeshNode> NavmeshNode::getNeighbourNode(int index) const
     {
         auto it = neighbours_.begin();
         std::advance(it, index);
@@ -62,10 +63,13 @@ namespace kraken
 
     bool NavmeshNode::isNeighbourOf(const NavmeshNode &other) const
     {
-        return neighbours_.find(other) != neighbours_.end();
+        auto it = std::find_if(neighbours_.cbegin(), neighbours_.cend(),
+                     [&other](std::shared_ptr<NavmeshNode> const& i){ return *(i.get()) == other; });
+
+        return it != neighbours_.cend();
     }
 
-    bool NavmeshNode::operator==(const NavmeshNode &rhs) const
+    bool NavmeshNode::operator==(const NavmeshNode &rhs) const noexcept
     {
         return rhs.nb_ == nb_;
     }

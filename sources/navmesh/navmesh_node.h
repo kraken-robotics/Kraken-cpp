@@ -14,15 +14,15 @@ namespace kraken
     {
     public:
         NavmeshNode(const Vector2D &pos);
-        NavmeshNode(const NavmeshNode&& navmeshNode) = default;
+        NavmeshNode(NavmeshNode&& navmeshNode) = default;
 
         void addEdge(const NavmeshEdge &e) noexcept;
         void removeEdge(const NavmeshEdge &e) noexcept;
-        void updateNeighbours() throw(std::runtime_error);
+        void updateNeighbours() noexcept (false);
 
-        std::set<NavmeshEdge>::size_type getNbNeighbours() const throw(std::runtime_error);
+        std::set<NavmeshEdge>::size_type getNbNeighbours() const noexcept (false);
         NavmeshEdge getNeighbourEdge(int index) const;
-        NavmeshNode getNeighbourNode(int index) const;
+        std::shared_ptr<NavmeshNode> getNeighbourNode(int index) const;
         bool isNeighbourOf(const NavmeshNode &other) const;
 
         bool operator==(const NavmeshNode &rhs) const noexcept;
@@ -33,7 +33,7 @@ namespace kraken
         Vector2D position_;
         std::set<NavmeshEdge> edges_;
         std::vector<int> edges_nb_;
-        std::set<NavmeshNode> neighbours_;
+        std::set<std::shared_ptr<NavmeshNode>> neighbours_;
     };
 
 }

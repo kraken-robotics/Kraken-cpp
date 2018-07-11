@@ -36,6 +36,7 @@ namespace kraken
         std::shared_ptr<NavmeshNode> getPoint(int index) const;
 
         bool operator==(const NavmeshEdge &rhs) const;
+        bool operator<(const NavmeshEdge &rhs) const;
 
     private:
         bool flip(bool force);
